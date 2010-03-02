@@ -144,11 +144,11 @@ type
 implementation
 
 uses
-  Math, Classes, SysUtils, L_IdList;
+  Math, Classes, SysUtils, IntegerList;
 
 procedure TMap.CheckCoverage;
 var
-  i, j, k, jmp: Integer;
+  i, j, jmp: Integer;
   Jump: TJump;
   CheckValue: Integer;
 begin
@@ -332,9 +332,9 @@ end;
 procedure TMap.BuildJumps;
 var
   i, j: Integer;
-  Points: TIdList;
+  Points: TIntegerList;
 begin
-  Points := TIdList.Create;
+  Points := TIntegerList.Create;
 
   for i := 0 to FWidth - 1 do
   begin

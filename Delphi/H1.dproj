@@ -48,6 +48,7 @@
 				<Form>Form4</Form>
 			</DCCReference>
 			<DCCReference Include="Map.pas"/>
+			<DCCReference Include="IntegerList.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>

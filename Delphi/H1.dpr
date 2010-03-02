@@ -3,7 +3,8 @@ program H1;
 uses
   Forms,
   MainForm in 'MainForm.pas' {Form4},
-  Map in 'Map.pas';
+  Map in 'Map.pas',
+  IntegerList in 'IntegerList.pas';
 
 {$R *.res}
 
