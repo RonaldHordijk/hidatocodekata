@@ -1,29 +1,43 @@
-unit MainForm;
+unit MainformBuilder;
 
 interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Map, StdCtrls, Generics.Collections;
+  Dialogs, MapBuilder, StdCtrls, Map;
 
 type
-  TForm4 = class(TForm)
+  TFormBuilder = class(TForm)
+    Button1: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    Button6: TButton;
+    Button7: TButton;
+    Button8: TButton;
+    Button9: TButton;
     lbJumps: TListBox;
     btnsolve: TButton;
-    btnAll: TButton;
-    Button1: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormPaint(Sender: TObject);
-    procedure lbJumpsClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
     procedure btnsolveClick(Sender: TObject);
     procedure lbJumpsDblClick(Sender: TObject);
-    procedure btnAllClick(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
+    procedure lbJumpsClick(Sender: TObject);
   private
-    AllMaps: TObjectList<TMap>;
-    AMIndex: Integer;
-
+    FMapBuilder: TMapBuilder;
     FMap: TMap;
+
+    procedure NewMap;
 
     function GetDrawRect(const CellX, CellY: Integer): TRect;
     procedure Deflate(var ARect: TRect; Size: integer);
@@ -31,49 +45,13 @@ type
   end;
 
 var
-  Form4: TForm4;
+  FormBuilder: TFormBuilder;
 
 implementation
 
 {$R *.dfm}
 
-uses
-  mmsystem;
-
-procedure TForm4.btnAllClick(Sender: TObject);
-var
-  i: integer;
-  SearchRec:TSearchRec;
-  Status: integer;
-  newMap: TMap;
-  start: Cardinal;
-begin
-  Status := FindFirst('data\hida*.xml', faAnyFile, SearchRec);
-  try
-    while Status = 0 do
-    begin
-      newMap := TMap.FromFile('data\' + SearchRec.Name);
-      if assigned(newMap) then
-        AllMaps.Add(newMap);
-
-      Status := FindNext(SearchRec);
-    end;
-  finally
-    FindClose(SearchRec);
-  end;
-
-  start := timeGetTime;
-  for i := 0 to AllMaps.Count - 1 do
-  begin
-    if not AllMaps[i].TrySolve then
-      ShowMessage('Not Solved ' + Inttostr(i));
-  end;
-
-  ShowMessage(format('Elapsed %.3f', [0.001*(timeGetTime - Start)]));
-
-end;
-
-procedure TForm4.btnsolveClick(Sender: TObject);
+procedure TFormBuilder.btnsolveClick(Sender: TObject);
 var
   Jump: TJump;
   i: integer;
@@ -105,19 +83,103 @@ begin
   invalidate
 end;
 
-procedure TForm4.Button1Click(Sender: TObject);
-var
-  i: integer;
-  prefix: string;
+procedure TFormBuilder.Button1Click(Sender: TObject);
 begin
-  FMap := AllMaps[AMIndex];
+  FMapBuilder.Free;
+  FMapBuilder := TMapBuilder.Create(5);
+  FMapBuilder.Generate;
+  NewMap;
+end;
 
-//  FMap.BuildJumps;
-//  FMap.CreateWorkMap;
-//  FMap.SolveJumps(nil);
-//  FMap.CheckCoverage;
+procedure TFormBuilder.Button2Click(Sender: TObject);
+begin
+  FMapBuilder.Free;
+  FMapBuilder := TMapBuilder.Create(6);
+  FMapBuilder.Generate;
+  NewMap;
+end;
+
+procedure TFormBuilder.Button3Click(Sender: TObject);
+begin
+  FMapBuilder.Free;
+  FMapBuilder := TMapBuilder.Create(7);
+  FMapBuilder.Generate;
+  NewMap;
+end;
+
+procedure TFormBuilder.Button4Click(Sender: TObject);
+begin
+  FMapBuilder.Free;
+  FMapBuilder := TMapBuilder.Create(8);
+  FMapBuilder.Generate;
+  NewMap;
+end;
+
+procedure TFormBuilder.Button5Click(Sender: TObject);
+begin
+  FMapBuilder.Free;
+  FMapBuilder := TMapBuilder.Create(9);
+  FMapBuilder.Generate;
+  NewMap;
+end;
+
+procedure TFormBuilder.Button6Click(Sender: TObject);
+begin
+  FMapBuilder.Free;
+  FMapBuilder := TMapBuilder.Create(10);
+  FMapBuilder.Generate;
+  NewMap;
+end;
+
+procedure TFormBuilder.Button7Click(Sender: TObject);
+begin
+  FMapBuilder.Free;
+  FMapBuilder := TMapBuilder.Create(11);
+  FMapBuilder.Generate;
+  NewMap;
+end;
+
+procedure TFormBuilder.Button8Click(Sender: TObject);
+begin
+  FMapBuilder.Free;
+  FMapBuilder := TMapBuilder.Create(12);
+  FMapBuilder.Generate;
+  NewMap;
+end;
+
+procedure TFormBuilder.Button9Click(Sender: TObject);
+var
+  i, j: Integer;
+  dx, dy: integer;
+  bkuvalue: integer;
+  Prefix: string;
+begin
+  for i := 0 to 4 do
+  begin
+    for j := 0 to 100 do
+    begin
+      dx := Random(FMap.Width);
+      dy := Random(FMap.Width);
+      if FMap.StartMap[dx,dy] > 2 then
+        BREAK;
+
+    end;
+
+    if FMap.StartMap[dx,dy] > 2 then
+    begin
+      bkuvalue := FMap.StartMap[dx,dy];
+      FMap.StartMap[dx,dy] := 0;
+      if not FMap.TrySolve then
+        FMap.StartMap[dx,dy] := bkuvalue;
+    end;
+  end;
+
+  FMap.BuildJumps;
+  FMap.CreateWorkMap;
+  FMap.SolveJumps();
 
   lbJumps.Items.Clear;
+
   for i := 0 to FMap.JumpList.Count - 1 do
   begin
     case FMap.Jumplist[i].GetState of
@@ -132,10 +194,9 @@ begin
 
   invalidate;
 
-  AMIndex := AMIndex + 1;
 end;
 
-procedure TForm4.Deflate(var ARect: TRect; Size: integer);
+procedure TFormBuilder.Deflate(var ARect: TRect; Size: integer);
 begin
   ARect.Left := ARect.Left + Size;
   ARect.Top := ARect.Top + Size;
@@ -143,41 +204,14 @@ begin
   ARect.Right := ARect.Right - Size;
 end;
 
-procedure TForm4.FormCreate(Sender: TObject);
-var
-  i: integer;
-  prefix: string;
+procedure TFormBuilder.FormCreate(Sender: TObject);
 begin
-  // 1 solved
-  // 2 solved
-  // 3 solved
-  // 4 solved
-  // 5 solved
-  // 6 solved
-
-  AllMaps := TObjectList<TMap>.Create;
-
-  FMap := TMap.FromString(test4);
-  FMap.BuildJumps;
-  FMap.CreateWorkMap;
-  FMap.SolveJumps;
-  FMap.CheckCoverage;
-  FMap.SolveJumps;
-
-  for i := 0 to FMap.JumpList.Count - 1 do
-  begin
-    case FMap.Jumplist[i].GetState of
-    jsSolved: prefix := 'S';
-    jsOneSol:  prefix := '1';
-    jsPartial:  prefix := 'P';
-    jsNoSol:  prefix := 'N';
-    end;
-
-    lbJumps.Items.Add(prefix +' ' + IntToStr(FMap.JumpList[i].PointLow.V) + ' -> ' + IntToStr(FMap.JumpList[i].PointHigh.V));
-  end;
+  FMapBuilder := TMapBuilder.Create(5);
+  FMapBuilder.Generate;
+  NewMap;
 end;
 
-procedure TForm4.FormPaint(Sender: TObject);
+procedure TFormBuilder.FormPaint(Sender: TObject);
 var
   i, j: integer;
   ARect: TRect;
@@ -300,10 +334,9 @@ begin
       end;
     end;
   end;
-
 end;
 
-function TForm4.GetDrawRect(const CellX, CellY: Integer): TRect;
+function TFormBuilder.GetDrawRect(const CellX, CellY: Integer): TRect;
 const
   CELLWIDTH = 30;
   CELLHEIGHT = 30;
@@ -312,14 +345,52 @@ begin
                  10 + (CellX + 1) * CELLWIDTH, 10 + (CellY + 1) * CELLHEIGHT);
 end;
 
-procedure TForm4.lbJumpsClick(Sender: TObject);
+procedure TFormBuilder.lbJumpsClick(Sender: TObject);
 begin
-  Self.Repaint;
+  Repaint;
 end;
 
-procedure TForm4.lbJumpsDblClick(Sender: TObject);
+procedure TFormBuilder.lbJumpsDblClick(Sender: TObject);
 begin
   btnsolveClick(Sender);
+end;
+
+procedure TFormBuilder.NewMap;
+var
+  x, y: integer;
+  i: integer;
+  prefix: string;
+begin
+  FMap := TMap.Create(FMapBuilder.Width, FMapBuilder.Height);
+
+  for x := 0 to FMap.Width - 1 do
+  begin
+    for y := 0 to FMap.Height - 1 do
+    begin
+      FMap.StartMap[x,y] := FMapBuilder.Map[x,y]
+    end;
+  end;
+
+  FMap.BuildJumps;
+  FMap.CreateWorkMap;
+//  FMap.SolveJumps;
+//  FMap.CheckCoverage;
+//  FMap.SolveJumps;
+
+  lbJumps.Items.Clear;
+  for i := 0 to FMap.JumpList.Count - 1 do
+  begin
+    case FMap.Jumplist[i].GetState of
+    jsSolved: prefix := 'S';
+    jsOneSol:  prefix := '1';
+    jsPartial:  prefix := 'P';
+    jsNoSol:  prefix := 'N';
+    end;
+
+    lbJumps.Items.Add(prefix +' ' + IntToStr(FMap.JumpList[i].PointLow.V) + ' -> ' + IntToStr(FMap.JumpList[i].PointHigh.V));
+  end;
+
+  Invalidate;
 end;
 
 end.
