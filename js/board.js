@@ -1,56 +1,53 @@
 /*jslint browser: true, windows: true, es5: true, white: true, nomen: false, plusplus: false, maxerr: 500, indent: 2*/
+/*global hidato: false */
 
-var
-  hidato = {};
 
 hidato.board = (function () {
   'use strict';
   
   var
-    result = {},
-    nRows_ = 0,
-    nCols_ = 0,
-    cells_ = [], 
-    path_ = []; 
+    result = {
+    nRows: 0,
+    nCols: 0,
+    level: 0,
+    cells: [], 
+    }; 
     
   function getCell(row, col) {
     var
-      index = row * nCols_ + col;
+      index = row * result.nCols + col;
     
-    if (!cells_[index]) {
-      cells_[index] = {type: 'none'};  
+    if (!result.cells[index]) {
+      result.cells[index] = {
+        type: 'none', 
+        x: row, 
+        y: col
+      };  
     }
-    return cells_[index];
+    return result.cells[index];
   }  
     
   result.initialize = function (data) {
     var
       i, j, cell;
 
-    nRows_ = data.nRows;
-    nCols_ = data.nCols;
+    result.nRows = data.nRows;
+    result.nCols = data.nCols;
     result.level = data.level;
 
-    for (i = 0; i < nRows_; i++) {
-      for (j = 0; j < nCols_; j++) {
+    for (i = 0; i < result.nRows; i++) {
+      for (j = 0; j < result.nCols; j++) {
         cell = getCell(i, j);
         
-        if (data.start[i][j] === 0) {
+        if (data.solution[i][j] < 0) {
+          cell.type =  'unused';
+        } else if (data.start[i][j] === 0) {
           cell.type = 'open'; 
           cell.sol = data.solution[i][j];
         } else {
           cell.type =  'fixed'; 
           cell.sol = data.solution[i][j];
         }  
-        
-        if (data.solution[i][j] > 0) {
-          path_[data.solution[i][j]] = {
-            cell: cell, 
-            row: i, 
-            col: j
-          };
-        } 
-        
       }
     }
   };
