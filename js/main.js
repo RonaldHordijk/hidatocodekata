@@ -1,5 +1,5 @@
 /*jslint browser: true, windows: true, es5: true, white: true, nomen: false, plusplus: false, maxerr: 500, indent: 2*/
-/*global Ext: false, window: false */
+/*global Ext: false, window: false, hidato: false */
 
 Ext.onReady(function () {
   'use strict';
@@ -10,13 +10,16 @@ Ext.onReady(function () {
       canvas,
       context;
       
-      
     canvas = document.createElement('canvas');
     canvas.setAttribute('width', window.innerWidth);
     canvas.setAttribute('height', window.innerHeight);
     canvasDiv.appendChild(canvas);
-  
-    context = canvas.getContext("2d");
+     
+    hidato.board.initialize(hidato.data);
+    hidato.path.initialize(hidato.board);
+    hidato.drawer.initialize(canvas);
+    
+    hidato.drawer.draw(hidato.board);
   }
 
   initialize();
