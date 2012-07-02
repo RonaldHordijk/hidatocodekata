@@ -8,7 +8,8 @@ hidato.drawer = (function () {
   var
     result = {},
     canvas_,
-    context_;
+    context_,
+    board_;
     
   function getCellRect(cell) {
     return {
@@ -25,9 +26,15 @@ hidato.drawer = (function () {
     context_ = canvas_.getContext("2d");
   };
   
-  result.draw = function (board) {
+  function drawBackground() {
     
-    board.cells.forEach(function (cell) {
+  }
+  
+  function drawCellBackground() {
+    context_.lineWidth = 1;
+    context_.strokeStyle = 'black';
+
+    board_.cells.forEach(function (cell) {
       var 
         rect = getCellRect(cell);
        
@@ -36,17 +43,54 @@ hidato.drawer = (function () {
       }
         
       context_.beginPath();
-      context_.lineWidth = 1;
       context_.rect(rect.x1, rect.y1, rect.x2 - rect.x1, rect.y2 - rect.y1);
+      context_.lineWidth = 1;
       context_.strokeStyle = 'black';
       context_.stroke();        
+       
+    });  
+    
+  }
+  
+  function drawAfterCellBackground() {
+    
+  }
+  
+ 
+  function drawCellForeground() {
+    var
+      rect = getCellRect(board_.cells[0]);
+
+    context_.font = "10pt Calibri";
+    context_.textAlign = "center";
+    
+    board_.cells.forEach(function (cell) {
+      var 
+        rect = getCellRect(cell);
+       
+      if (cell.type === 'unused') {
+        return;
+      }
         
       if (cell.type === 'fixed') {
-        context_.font = "10pt Calibri";
-        context_.textAlign = "center";
         context_.fillText(cell.sol, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2));
       }  
     });  
+  }
+
+  function drawAfterCellForeground() {
+
+  }
+  
+  result.draw = function (board) {
+    board_ = board;
+    
+    drawBackground();
+    drawCellBackground();
+    drawAfterCellBackground();
+    drawCellForeground();
+    drawAfterCellForeground();
+   
   };
 
   return result;
