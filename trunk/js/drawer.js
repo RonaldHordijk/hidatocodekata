@@ -9,15 +9,17 @@ hidato.drawer = (function () {
     result = {},
     canvas_,
     context_,
-    board_;
+    board_,
+    borderSize_,
+    cellSize_;
     
   function getCellRect(cell) {
     return {
-      x1: 100 + cell.x * 40,
-      y1: 100 + cell.y * 40,
-      x2: 100 + cell.x * 40 + 39,
-      y2: 100 + cell.y * 40 + 39,
-    }
+      x1: borderSize_ + cell.x * cellSize_,
+      y1: borderSize_ + cell.y * cellSize_,
+      x2: borderSize_ + cell.x * cellSize_ + cellSize_,
+      y2: borderSize_ + cell.y * cellSize_ + cellSize_,
+    };
   }
     
 
@@ -59,9 +61,10 @@ hidato.drawer = (function () {
   
   function drawCellForeground() {
     var
+      textSize = 0.4 * cellSize_,
       rect = getCellRect(board_.cells[0]);
-
-    context_.font = "10pt Calibri";
+    
+    context_.font = textSize + "pt Calibri";
     context_.textAlign = "center";
     context_.fillStyle = "black";
     
@@ -74,7 +77,7 @@ hidato.drawer = (function () {
       }
         
       if (cell.type === 'fixed') {
-        context_.fillText(cell.sol, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2));
+        context_.fillText(cell.sol, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2 + textSize));
       }  
     });  
   }
@@ -82,9 +85,17 @@ hidato.drawer = (function () {
   function drawAfterCellForeground() {
 
   }
+
+  result.resize = function (board) {
+    borderSize_ = Math.min(0.05 * canvas_.width, 0.05 * canvas_.height);
+    cellSize_ = Math.min((canvas_.width - 2 * borderSize_) / board.nCols, 
+                         (canvas_.height - 2 * borderSize_) / board.nRows);
+  };
   
   result.draw = function (board) {
     board_ = board;
+    
+    result.resize(board);
     
     drawBackground();
     drawCellBackground();
