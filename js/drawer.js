@@ -27,7 +27,8 @@ hidato.drawer = (function () {
   };
   
   function drawBackground() {
-    
+    context_.fillStyle = 'rgb(204,205,245)';
+    context_.fillRect(0, 0, canvas_.width, canvas_.height);
   }
   
   function drawCellBackground() {
@@ -56,13 +57,13 @@ hidato.drawer = (function () {
     
   }
   
- 
   function drawCellForeground() {
     var
       rect = getCellRect(board_.cells[0]);
 
     context_.font = "10pt Calibri";
     context_.textAlign = "center";
+    context_.fillStyle = "black";
     
     board_.cells.forEach(function (cell) {
       var 
