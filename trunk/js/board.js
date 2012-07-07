@@ -12,7 +12,7 @@ hidato.board = (function () {
       cells: [],
     };
 
-  function getCell(row, col) {
+  result.getCell = function (row, col) {
     var
       index = row * result.nCols + col;
 
@@ -24,7 +24,7 @@ hidato.board = (function () {
       };
     }
     return result.cells[index];
-  }
+  };
 
   result.initialize = function (data) {
     var
@@ -36,7 +36,7 @@ hidato.board = (function () {
 
     for (i = 0; i < result.nRows; i++) {
       for (j = 0; j < result.nCols; j++) {
-        cell = getCell(i, j);
+        cell = result.getCell(i, j);
 
         if (data.solution[i][j] < 0) {
           cell.type =  'unused';
