@@ -5,25 +5,20 @@ hidato.drawer = (function () {
   'use strict';
 
   var
-    result = {},
+    result = {
+      backgroundAnimations: [],
+      foregroundAnimations: []
+    },
     canvas_,
     context_,
     board_,
-    borderSize_,
-    cellSize_;
+    coordCellConverter_;
 
-  function getCellRect(cell) {
-    return {
-      x1: borderSize_ + cell.x * cellSize_,
-      y1: borderSize_ + cell.y * cellSize_,
-      x2: borderSize_ + cell.x * cellSize_ + cellSize_,
-      y2: borderSize_ + cell.y * cellSize_ + cellSize_,
-    };
-  }
-
-  result.initialize = function (canvas) {
+  result.initialize = function (canvas, coordCellConverter) {
     canvas_ = canvas;
     context_ = canvas_.getContext("2d");
+
+    coordCellConverter_ = coordCellConverter;
   };
 
   function drawBackground() {
@@ -37,7 +32,7 @@ hidato.drawer = (function () {
 
     board_.cells.forEach(function (cell) {
       var
-        rect = getCellRect(cell);
+        rect = coordCellConverter_.celltoRect(cell);
 
       if (cell.type === 'unused') {
         return;
@@ -48,19 +43,46 @@ hidato.drawer = (function () {
       context_.lineWidth = 1;
       context_.strokeStyle = 'black';
       context_.stroke();
-
     });
+  }
+
+  function removeAnimation(animation) {
+    var
+      i;
+
+    for (i = result.backgroundAnimations.length - 1; i >= 0; i++) {
+      if (result.backgroundAnimations === animation) {
+        result.backgroundAnimations.plice(i, 1);
+      }
+    }
+
+    for (i = result.foregroundAnimations.length - 1; i >= 0; i++) {
+      if (result.foregroundAnimations === animation) {
+        result.foregroundAnimations.plice(i, 1);
+      }
+    }
 
   }
 
-  function drawAfterCellBackground() {
+  function drawAfterCellBackground(time) {
+    result.backgroundAnimations.forEach(function (animation) {
+      if (!animation.isInitialized()) {
+        animation.initialize(context_, time);
+      }
 
+      animation.animate(time);
+
+      if (animation.isFinished(time)) {
+        removeAnimation(animation);
+      }
+
+    });
   }
 
   function drawCellForeground() {
     var
-      textSize = 0.4 * cellSize_,
-      rect = getCellRect(board_.cells[0]);
+      rect = coordCellConverter_.celltoRect(board_.cells[0]),
+      textSize = 0.4 * (rect.y2 - rect.y1);
 
     context_.font = textSize + "pt Calibri";
     context_.textAlign = "center";
@@ -68,7 +90,7 @@ hidato.drawer = (function () {
 
     board_.cells.forEach(function (cell) {
       var
-        rect = getCellRect(cell);
+        rect = coordCellConverter_.celltoRect(cell);
 
       if (cell.type === 'unused') {
         return;
@@ -80,26 +102,18 @@ hidato.drawer = (function () {
     });
   }
 
-  function drawAfterCellForeground() {
+  function drawAfterCellForeground(time) {
 
   }
 
-  result.resize = function (board) {
-    borderSize_ = Math.min(0.05 * canvas_.width, 0.05 * canvas_.height);
-    cellSize_ = Math.min((canvas_.width - 2 * borderSize_) / board.nCols,
-                         (canvas_.height - 2 * borderSize_) / board.nRows);
-  };
-
-  result.draw = function (board) {
+  result.draw = function (board, time) {
     board_ = board;
-
-    result.resize(board);
 
     drawBackground();
     drawCellBackground();
-    drawAfterCellBackground();
+    drawAfterCellBackground(time);
     drawCellForeground();
-    drawAfterCellForeground();
+    drawAfterCellForeground(time);
 
   };
 
