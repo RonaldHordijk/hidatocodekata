@@ -27,6 +27,9 @@ for ($i = 12; $i > 0 ; $i--) {
 	  }
 
 	  $filename .= '-data.xml';
+          if (-e $filename) {
+            die;
+          }
 	  
 	  $ress = '';
 	  print "retrieving $filename...";
