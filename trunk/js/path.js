@@ -51,7 +51,7 @@ hidato.path = (function () {
         }
       }
     } else {
-      for (i = cell.sol; i > 0; i--) {
+      for (i = cell.sol; i > 1; i--) {
         if (!result.path[i]) {
           startHole_ = i;
           break;
@@ -59,8 +59,8 @@ hidato.path = (function () {
       }
     }
 
-    // no hole go the othe direction
-    if (startHole_ < 0) {
+    // no hole go the other direction
+    if (startHole_ < 1) {
       flipDirection();
       findHole(cell);
     }
@@ -74,7 +74,7 @@ hidato.path = (function () {
         }
       }
     } else {
-      for (i = startHole_; i > 0; i--) {
+      for (i = startHole_; i > 1; i--) {
         if (result.path[i]) {
           endHole_ = i;
           break;
@@ -112,7 +112,7 @@ hidato.path = (function () {
           findHole(cell);
         }
       }
-    } else if (cell.type === 'open') {
+    } else if (cell.type === 'used') {
       cell.type = 'open';
       result.path[cell.val] = undefined;
       startHole_ = cell.val;
@@ -129,8 +129,8 @@ hidato.path = (function () {
       }
     });
 
-    if (result.path[0]) {
-      result.path[0].special = 'start';
+    if (result.path[1]) {
+      result.path[1].special = 'start';
     }
 
     nrCells_ = result.path.length;
@@ -138,8 +138,8 @@ hidato.path = (function () {
       result.path[nrCells_ - 1].special = 'end';
     }
 
-    if (result.path[0]) {
-      result.select(result.path[0]);
+    if (result.path[1]) {
+      result.select(result.path[1]);
     }
   };
 
