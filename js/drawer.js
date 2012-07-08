@@ -67,7 +67,7 @@ hidato.drawer = (function () {
   function drawAfterCellBackground(time) {
     result.backgroundAnimations.forEach(function (animation) {
       if (!animation.isInitialized()) {
-        animation.initialize(context_, time);
+        animation.initialize(context_, coordCellConverter_, time);
       }
 
       animation.animate(time);
@@ -86,7 +86,6 @@ hidato.drawer = (function () {
 
     context_.font = textSize + "pt Calibri";
     context_.textAlign = "center";
-    context_.fillStyle = "black";
 
     board_.cells.forEach(function (cell) {
       var
@@ -97,6 +96,12 @@ hidato.drawer = (function () {
       }
 
       if (cell.type === 'fixed') {
+        context_.fillStyle = "black";
+        context_.fillText(cell.sol, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2 + textSize));
+      }
+
+      if (cell.type === 'used') {
+        context_.fillStyle = "blue";
         context_.fillText(cell.sol, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2 + textSize));
       }
     });
