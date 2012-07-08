@@ -17,9 +17,9 @@ function onLoad() {
     );
   }());
 
-  function animate() {
+  function animate(time) {
     window.requestAnimFrame(animate);
-    hidato.drawer.draw(hidato.board);
+    hidato.drawer.draw(hidato.board, time);
   }
 
   window.onresize = function () {
@@ -29,6 +29,7 @@ function onLoad() {
     if (canvas) {
       canvas.setAttribute('width', window.innerWidth);
       canvas.setAttribute('height', window.innerHeight);
+      hidato.coordCellConverter.resize();
     }
   };
 
@@ -46,7 +47,8 @@ function onLoad() {
 
     hidato.board.initialize(hidato.data);
     hidato.path.initialize(hidato.board);
-    hidato.drawer.initialize(canvas);
+    hidato.coordCellConverter.initialize(canvas, hidato.board);
+    hidato.drawer.initialize(canvas, hidato.coordCellConverter);
 
     animate();
   }
