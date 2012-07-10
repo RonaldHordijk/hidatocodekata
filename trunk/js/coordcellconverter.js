@@ -39,11 +39,11 @@ hidato.coordCellConverter = (function () {
       x = Math.round((coord.x - borderSize_) / cellSize_ - 0.5),
       y = Math.round((coord.y - borderSize_) / cellSize_ - 0.5);
 
-    if ((x < 0) || (x >= board_.nrRows)) {
+    if ((x < 0) || (x >= board_.nRows)) {
       return null;
     }
 
-    if ((y < 0) || (y >= board_.nrCols)) {
+    if ((y < 0) || (y >= board_.nCols)) {
       return null;
     }
 
