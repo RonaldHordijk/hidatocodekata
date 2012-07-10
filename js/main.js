@@ -33,10 +33,22 @@ function onLoad() {
     }
   };
 
+  function onclick(event) {
+    var
+      cell = hidato.coordCellConverter.getCellFromCoordinates({x: event.pageX, y: event.pageY});
+
+    if (!cell) {
+      return;
+    }
+
+    hidato.path.select(cell);
+  }
+
   function initialize() {
     var
       canvasDiv = document.getElementById('canvasdiv'),
       canvas,
+      animation,
       context;
 
     canvas = document.createElement('canvas');
@@ -50,7 +62,14 @@ function onLoad() {
     hidato.coordCellConverter.initialize(canvas, hidato.board);
     hidato.drawer.initialize(canvas, hidato.coordCellConverter);
 
-    animate();
+    animation = hidato.createStartAnimation(hidato.path.path[1]);
+    hidato.drawer.backgroundAnimations.push(animation);
+    animation = hidato.createEndAnimation(hidato.path.path[hidato.path.path.length - 1]);
+    hidato.drawer.backgroundAnimations.push(animation);
+
+    canvas.addEventListener("click", onclick, false);
+
+    animate(Date.now());
   }
 
   function onDeviceReady() {
