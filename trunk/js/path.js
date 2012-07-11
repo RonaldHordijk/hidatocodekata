@@ -105,7 +105,7 @@ hidato.path = (function () {
       startHole_ = (direction_ === 'up') ? startHole_ + 1 : startHole_ - 1;
 
       if (startHole_ === endHole_) {
-        if (!allFilled()) {
+        if (allFilled()) {
           startHole_ = -1;
           endHole_ = -1;
         } else {
