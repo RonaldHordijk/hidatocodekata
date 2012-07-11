@@ -133,7 +133,7 @@ hidato.drawer = (function () {
 
       if (cell.type === 'used') {
         context_.fillStyle = drawingScheme_.fontColorUsed || "blue";
-        context_.fillText(cell.sol, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2 + textSize));
+        context_.fillText(cell.val, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2 + textSize));
       }
     });
   }
