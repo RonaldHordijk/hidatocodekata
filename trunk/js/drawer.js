@@ -12,36 +12,67 @@ hidato.drawer = (function () {
     canvas_,
     context_,
     board_,
-    coordCellConverter_;
+    coordCellConverter_,
+    drawingScheme_;
 
-  result.initialize = function (canvas, coordCellConverter) {
+  result.initialize = function (canvas, drawingScheme, coordCellConverter) {
     canvas_ = canvas;
     context_ = canvas_.getContext("2d");
 
+    drawingScheme_ = drawingScheme;  
     coordCellConverter_ = coordCellConverter;
   };
 
   function drawBackground() {
-    context_.fillStyle = 'rgb(204,205,245)';
+    if (drawingScheme_.drawBackground) {
+      drawingScheme_.drawBackground(context_, canvas_.width, canvas_.height);
+    }
+
+    context_.fillStyle = drawingScheme_.backgroundColor || 'white';
     context_.fillRect(0, 0, canvas_.width, canvas_.height);
   }
 
   function drawCellBackground() {
-    context_.lineWidth = 1;
-    context_.strokeStyle = 'black';
-
     board_.cells.forEach(function (cell) {
       var
         rect = coordCellConverter_.celltoRect(cell);
 
       if (cell.type === 'unused') {
+        if (drawingScheme_.drawCellBackgroundUnUsed) {
+          drawingScheme_.drawCellBackgroundUnUsed(context_, rect, cell);
+        }
         return;
-      }
+        
+      } else if (cell.type === 'fixed') {
+        if (drawingScheme_.drawCellBackgroundFixed) {
+          drawingScheme_.drawCellBackgroundFixed(context_, rect, cell);
+          return;
+        }
+
+        context_.fillStyle = drawingScheme_.CellbackgroundColorFixed || 'white';
+      } else if (cell.type === 'used') {
+        if (drawingScheme_.drawCellBackgroundUsed) {
+          drawingScheme_.drawCellBackgroundUsed(context_, rect, cell);
+          return;
+        }
+
+        context_.fillStyle = drawingScheme_.CellbackgroundColorUsed || 'white';
+      } else if (cell.type === 'open') {
+        if (drawingScheme_.drawCellBackgroundOpen) {
+          drawingScheme_.drawCellBackgroundOpen(context_, rect, cell);
+          return;
+        }
+
+        context_.fillStyle = drawingScheme_.CellbackgroundColorOpen || 'white';
+      }   
+  
+      // default handling    
+      context_.lineWidth = 1;
+      context_.strokeStyle = drawingScheme_.lineColor || 'black';
 
       context_.beginPath();
       context_.rect(rect.x1, rect.y1, rect.x2 - rect.x1, rect.y2 - rect.y1);
-      context_.lineWidth = 1;
-      context_.strokeStyle = 'black';
+      context_.fill();
       context_.stroke();
     });
   }
@@ -52,13 +83,13 @@ hidato.drawer = (function () {
 
     for (i = result.backgroundAnimations.length - 1; i >= 0; i++) {
       if (result.backgroundAnimations === animation) {
-        result.backgroundAnimations.plice(i, 1);
+        result.backgroundAnimations.splice(i, 1);
       }
     }
 
     for (i = result.foregroundAnimations.length - 1; i >= 0; i++) {
       if (result.foregroundAnimations === animation) {
-        result.foregroundAnimations.plice(i, 1);
+        result.foregroundAnimations.splice(i, 1);
       }
     }
 
@@ -67,7 +98,7 @@ hidato.drawer = (function () {
   function drawAfterCellBackground(time) {
     result.backgroundAnimations.forEach(function (animation) {
       if (!animation.isInitialized()) {
-        animation.initialize(context_, coordCellConverter_, time);
+        animation.initialize(context_, coordCellConverter_, drawingScheme_,  time);
       }
 
       animation.animate(time);
@@ -84,7 +115,7 @@ hidato.drawer = (function () {
       rect = coordCellConverter_.celltoRect(board_.cells[0]),
       textSize = 0.4 * (rect.y2 - rect.y1);
 
-    context_.font = textSize + "pt Calibri";
+    context_.font = textSize + "pt " + (drawingScheme_.fontName || "Calibri");
     context_.textAlign = "center";
 
     board_.cells.forEach(function (cell) {
@@ -96,12 +127,12 @@ hidato.drawer = (function () {
       }
 
       if (cell.type === 'fixed') {
-        context_.fillStyle = "black";
+        context_.fillStyle = drawingScheme_.fontColorFixed || "black";
         context_.fillText(cell.sol, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2 + textSize));
       }
 
       if (cell.type === 'used') {
-        context_.fillStyle = "blue";
+        context_.fillStyle = drawingScheme_.fontColorUsed || "blue";
         context_.fillText(cell.sol, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2 + textSize));
       }
     });

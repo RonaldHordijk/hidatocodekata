@@ -7,6 +7,7 @@ hidato.createStartAnimation = function (cell) {
   var
     context_,
     coordCellConverter_,
+    drawingScheme_,
     cell_ = cell,
     startTime_,
     result = {};
@@ -15,9 +16,10 @@ hidato.createStartAnimation = function (cell) {
     return context_ !== undefined;
   };
 
-  result.initialize = function (context, coordCellConverter, startTime) {
+  result.initialize = function (context, coordCellConverter, drawingScheme, startTime) {
     context_ = context;
     coordCellConverter_ = coordCellConverter;
+    drawingScheme_ = drawingScheme;
     startTime_ = startTime;
   };
 

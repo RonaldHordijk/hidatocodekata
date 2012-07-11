@@ -60,7 +60,7 @@ function onLoad() {
     hidato.board.initialize(hidato.data);
     hidato.path.initialize(hidato.board);
     hidato.coordCellConverter.initialize(canvas, hidato.board);
-    hidato.drawer.initialize(canvas, hidato.coordCellConverter);
+    hidato.drawer.initialize(canvas, hidato.drawingScheme, hidato.coordCellConverter);
 
     animation = hidato.createStartAnimation(hidato.path.path[1]);
     hidato.drawer.backgroundAnimations.push(animation);
