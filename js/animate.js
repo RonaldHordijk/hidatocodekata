@@ -29,7 +29,7 @@ hidato.createStartAnimation = function (cell) {
 
   result.animate = function (time) {
     var
-      NRCIRCLES = 10,
+      NRCIRCLES = 5,
       i, r,
       radius,
       center = {},
@@ -40,7 +40,7 @@ hidato.createStartAnimation = function (cell) {
     center.y = 0.5 * rect.y1 + 0.5 * rect.y2;
     radius = 0.7 * (rect.x2 - rect.x1);
 
-    context_.lineWidth = 0.5 * radius / NRCIRCLES;
+    context_.lineWidth = 0.25 * radius / NRCIRCLES;
 
     for (i = 0; i < NRCIRCLES; i++) {
       r = (i / NRCIRCLES + timestep) % 1;
