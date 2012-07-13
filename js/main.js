@@ -20,8 +20,8 @@ function onLoad() {
   function animate(time) {
     window.requestAnimFrame(animate);
     hidato.drawer.drawBackground();
-    hidato.drawer.drawCells(hidato.board.cells, hidato.coordCellConverter, time);
-    //hidato.drawer.drawCells(hidato.path.cells, time);
+    hidato.drawer.drawCells(hidato.board.cells, hidato.boardCoordCellConverter, time);
+    hidato.drawer.drawCells(hidato.path.path, hidato.pathCoordCellConverter, time);
   }
 
   window.onresize = function () {
@@ -31,13 +31,14 @@ function onLoad() {
     if (canvas) {
       canvas.setAttribute('width', window.innerWidth);
       canvas.setAttribute('height', window.innerHeight);
-      hidato.coordCellConverter.resize();
+      hidato.boardCoordCellConverter.resize(canvas.width, canvas.heigth);
+      hidato.pathCoordCellConverter.resize(canvas.width, canvas.heigth);
     }
   };
 
   function onclick(event) {
     var
-      cell = hidato.coordCellConverter.getCellFromCoordinates({x: event.pageX, y: event.pageY});
+      cell = hidato.boardCoordCellConverter.getCellFromCoordinates({x: event.pageX, y: event.pageY});
 
     if (!cell) {
       return;
@@ -61,8 +62,9 @@ function onLoad() {
 
     hidato.board.initialize(hidato.data[1]);
     hidato.path.initialize(hidato.board);
-    hidato.coordCellConverter.initialize(canvas, hidato.board);
-    hidato.drawer.initialize(canvas, hidato.drawingScheme, hidato.coordCellConverter);
+    hidato.boardCoordCellConverter.initialize(hidato.board, canvas.width, canvas.height);
+    hidato.pathCoordCellConverter.initialize(hidato.path, canvas.width, canvas.height);
+    hidato.drawer.initialize(canvas, hidato.drawingScheme);
 
     animation = hidato.createStartAnimation(hidato.path.path[1]);
     hidato.drawer.backgroundAnimations.push(animation);
