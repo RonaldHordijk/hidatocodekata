@@ -15,7 +15,7 @@ hidato.drawingScheme = (function () {
       fontColorUsed: 'rgb(120,120,255)',
     };
 
-  result.drawCellBackgroundFixed = function(context, rect) {
+  result.drawCellBackgroundFixed = function (context, rect) {
     context.lineWidth = 1;
     context.fillStyle = result.CellbackgroundColorFixed;
     context.strokeStyle = result.lineColor;
@@ -25,7 +25,7 @@ hidato.drawingScheme = (function () {
     context.rect(rect.x1 + 3, rect.y1 + 3, rect.x2 - rect.x1 - 6, rect.y2 - rect.y1 - 6);
     context.fill();
     context.stroke();
-  }
+  };
 
   return result;
 }());

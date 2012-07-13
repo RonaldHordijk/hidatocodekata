@@ -15,25 +15,30 @@ hidato.drawer = (function () {
     coordCellConverter_,
     drawingScheme_;
 
-  result.initialize = function (canvas, drawingScheme, coordCellConverter) {
+  result.initialize = function (canvas, drawingScheme) {
     canvas_ = canvas;
     context_ = canvas_.getContext("2d");
 
-    drawingScheme_ = drawingScheme;  
-    coordCellConverter_ = coordCellConverter;
+    drawingScheme_ = drawingScheme;
   };
 
   function drawCellBackground() {
     cells_.forEach(function (cell) {
       var
-        rect = coordCellConverter_.celltoRect(cell);
+        rect;
+
+      if (!cell) {
+        return;
+      }
+
+      rect = coordCellConverter_.celltoRect(cell);
 
       if (cell.type === 'unused') {
         if (drawingScheme_.drawCellBackgroundUnUsed) {
           drawingScheme_.drawCellBackgroundUnUsed(context_, rect, cell);
         }
         return;
-        
+
       } else if (cell.type === 'fixed') {
         if (drawingScheme_.drawCellBackgroundFixed) {
           drawingScheme_.drawCellBackgroundFixed(context_, rect, cell);
@@ -55,8 +60,8 @@ hidato.drawer = (function () {
         }
 
         context_.fillStyle = drawingScheme_.CellbackgroundColorOpen || 'white';
-      }   
-  
+      }
+
       // default handling    
       context_.lineWidth = 1;
       context_.strokeStyle = drawingScheme_.lineColor || 'black';
@@ -103,7 +108,7 @@ hidato.drawer = (function () {
 
   function drawCellForeground() {
     var
-      rect = coordCellConverter_.celltoRect(cells_[0]),
+      rect = coordCellConverter_.celltoRect(cells_[0] || cells_[1]),
       textSize = 0.4 * (rect.y2 - rect.y1);
 
     context_.font = textSize + "pt " + (drawingScheme_.fontName || "Calibri");
@@ -111,7 +116,13 @@ hidato.drawer = (function () {
 
     cells_.forEach(function (cell) {
       var
-        rect = coordCellConverter_.celltoRect(cell);
+        rect;
+
+      if (!cell) {
+        return;
+      }
+
+      rect = coordCellConverter_.celltoRect(cell);
 
       if (cell.type === 'unused') {
         return;
@@ -133,14 +144,14 @@ hidato.drawer = (function () {
 
   }
 
-  result.drawBackground = function() {
+  result.drawBackground = function () {
     if (drawingScheme_.drawBackground) {
       drawingScheme_.drawBackground(context_, canvas_.width, canvas_.height);
     }
 
     context_.fillStyle = drawingScheme_.backgroundColor || 'white';
     context_.fillRect(0, 0, canvas_.width, canvas_.height);
-  }
+  };
 
   result.drawCells = function (cells, coordCellConverter, time) {
     cells_ = cells;
@@ -154,7 +165,7 @@ hidato.drawer = (function () {
   };
 
   result.draw = function (board, time) {
-    board_ = board;
+    cells_ = board.cells;
 
     result.drawBackground();
     drawCellBackground();
