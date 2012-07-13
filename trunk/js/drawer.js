@@ -11,7 +11,7 @@ hidato.drawer = (function () {
     },
     canvas_,
     context_,
-    board_,
+    cells_,
     coordCellConverter_,
     drawingScheme_;
 
@@ -23,17 +23,8 @@ hidato.drawer = (function () {
     coordCellConverter_ = coordCellConverter;
   };
 
-  function drawBackground() {
-    if (drawingScheme_.drawBackground) {
-      drawingScheme_.drawBackground(context_, canvas_.width, canvas_.height);
-    }
-
-    context_.fillStyle = drawingScheme_.backgroundColor || 'white';
-    context_.fillRect(0, 0, canvas_.width, canvas_.height);
-  }
-
   function drawCellBackground() {
-    board_.cells.forEach(function (cell) {
+    cells_.forEach(function (cell) {
       var
         rect = coordCellConverter_.celltoRect(cell);
 
@@ -112,13 +103,13 @@ hidato.drawer = (function () {
 
   function drawCellForeground() {
     var
-      rect = coordCellConverter_.celltoRect(board_.cells[0]),
+      rect = coordCellConverter_.celltoRect(cells_[0]),
       textSize = 0.4 * (rect.y2 - rect.y1);
 
     context_.font = textSize + "pt " + (drawingScheme_.fontName || "Calibri");
     context_.textAlign = "center";
 
-    board_.cells.forEach(function (cell) {
+    cells_.forEach(function (cell) {
       var
         rect = coordCellConverter_.celltoRect(cell);
 
@@ -142,10 +133,30 @@ hidato.drawer = (function () {
 
   }
 
+  result.drawBackground = function() {
+    if (drawingScheme_.drawBackground) {
+      drawingScheme_.drawBackground(context_, canvas_.width, canvas_.height);
+    }
+
+    context_.fillStyle = drawingScheme_.backgroundColor || 'white';
+    context_.fillRect(0, 0, canvas_.width, canvas_.height);
+  }
+
+  result.drawCells = function (cells, coordCellConverter, time) {
+    cells_ = cells;
+    coordCellConverter_ = coordCellConverter;
+
+    drawCellBackground();
+    drawAfterCellBackground(time);
+    drawCellForeground();
+    drawAfterCellForeground(time);
+
+  };
+
   result.draw = function (board, time) {
     board_ = board;
 
-    drawBackground();
+    result.drawBackground();
     drawCellBackground();
     drawAfterCellBackground(time);
     drawCellForeground();

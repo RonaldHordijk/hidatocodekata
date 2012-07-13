@@ -19,7 +19,9 @@ function onLoad() {
 
   function animate(time) {
     window.requestAnimFrame(animate);
-    hidato.drawer.draw(hidato.board, time);
+    hidato.drawer.drawBackground();
+    hidato.drawer.drawCells(hidato.board.cells, hidato.coordCellConverter, time);
+    //hidato.drawer.drawCells(hidato.path.cells, time);
   }
 
   window.onresize = function () {
@@ -57,7 +59,7 @@ function onLoad() {
     canvas.setAttribute('height', window.innerHeight);
     canvasDiv.appendChild(canvas);
 
-    hidato.board.initialize(hidato.data);
+    hidato.board.initialize(hidato.data[1]);
     hidato.path.initialize(hidato.board);
     hidato.coordCellConverter.initialize(canvas, hidato.board);
     hidato.drawer.initialize(canvas, hidato.drawingScheme, hidato.coordCellConverter);
