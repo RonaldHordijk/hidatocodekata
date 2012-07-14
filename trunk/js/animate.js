@@ -71,3 +71,62 @@ hidato.createEndAnimation = function (cell) {
 
   return result;
 };
+
+
+hidato.createActiveSegmentAnimation = function (startCell, endCell) {
+  'use strict';
+
+  var
+    context_,
+    coordCellConverter_,
+    drawingScheme_,
+    startCell_ = startCell,
+    endCell_ = endCell,
+    startTime_,
+    result = {};
+
+  result.isInitialized = function () {
+    return context_ !== undefined;
+  };
+
+  result.initialize = function (context, coordCellConverter, drawingScheme, startTime) {
+    context_ = context;
+    coordCellConverter_ = coordCellConverter;
+    drawingScheme_ = drawingScheme;
+    startTime_ = startTime;
+  };
+
+  result.animate = function (time) {
+    var
+      rect;
+      
+    if (startCell_ === endCell_) {
+      return;
+    }
+
+    rect = coordCellConverter_.celltoRect(startCell_);
+
+    context_.fillStyle = 'rgba(128,128,255,0.7)';
+    context_.beginPath();
+    context_.rect(rect.x1, rect.y1, rect.x2 - rect.x1, rect.y2 - rect.y1);
+    context_.fill();
+
+    rect = coordCellConverter_.celltoRect(endCell_);
+
+    context_.fillStyle = 'rgba(128,255,128,0.7)';
+    context_.beginPath();
+    context_.rect(rect.x1, rect.y1, rect.x2 - rect.x1, rect.y2 - rect.y1);
+    context_.fill();
+  }
+  
+  result.isFinished = function (time) {
+    return false;
+  };
+  
+  result.update = function (startCell, endCell) {
+    startCell_ = startCell;
+    endCell_ = endCell;
+  }
+
+  return result;
+};
