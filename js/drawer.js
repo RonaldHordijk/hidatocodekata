@@ -97,7 +97,7 @@ hidato.drawer = (function () {
         animation.initialize(context_, coordCellConverter_, drawingScheme_,  time);
       }
 
-      animation.animate(time);
+      animation.animate(coordCellConverter_, time);
 
       if (animation.isFinished(time)) {
         removeAnimation(animation);
