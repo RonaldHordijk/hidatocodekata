@@ -45,21 +45,21 @@ hidato.drawer = (function () {
           return;
         }
 
-        context_.fillStyle = drawingScheme_.CellbackgroundColorFixed || 'white';
+        context_.fillStyle = drawingScheme_.cellbackgroundColorFixed || 'white';
       } else if (cell.type === 'used') {
         if (drawingScheme_.drawCellBackgroundUsed) {
           drawingScheme_.drawCellBackgroundUsed(context_, rect, cell);
           return;
         }
 
-        context_.fillStyle = drawingScheme_.CellbackgroundColorUsed || 'white';
+        context_.fillStyle = drawingScheme_.cellbackgroundColorUsed || 'white';
       } else if (cell.type === 'open') {
         if (drawingScheme_.drawCellBackgroundOpen) {
           drawingScheme_.drawCellBackgroundOpen(context_, rect, cell);
           return;
         }
 
-        context_.fillStyle = drawingScheme_.CellbackgroundColorOpen || 'white';
+        context_.fillStyle = drawingScheme_.cellbackgroundColorOpen || 'white';
       }
 
       // default handling    
