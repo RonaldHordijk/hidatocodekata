@@ -99,7 +99,7 @@ hidato.createActiveSegmentAnimation = function (startCell, endCell) {
   result.animate = function (time) {
     var
       rect;
-      
+
     if (startCell_ === endCell_) {
       return;
     }
@@ -117,16 +117,16 @@ hidato.createActiveSegmentAnimation = function (startCell, endCell) {
     context_.beginPath();
     context_.rect(rect.x1, rect.y1, rect.x2 - rect.x1, rect.y2 - rect.y1);
     context_.fill();
-  }
-  
+  };
+
   result.isFinished = function (time) {
     return false;
   };
-  
+
   result.update = function (startCell, endCell) {
     startCell_ = startCell;
     endCell_ = endCell;
-  }
+  };
 
   return result;
 };

@@ -10,6 +10,8 @@ hidato.path = (function () {
     nrCells_ = 0,
     startHole_,
     endHole_,
+    startSegment_,
+    endSegment_,
     result = {
       path: []
     };
@@ -81,6 +83,41 @@ hidato.path = (function () {
         }
       }
     }
+
+    //hole found mark segment
+
+    if (direction_ === 'up') {
+      for (i = startHole_; i > 0; i--) {
+        if (result.path[i] && (result.path[i].type === 'fixed')) {
+          startSegment_ = i;
+          break;
+        }
+      }
+    } else {
+      for (i = startHole_; i < nrCells_; i++) {
+        if (result.path[i] && (result.path[i].type === 'fixed')) {
+          startSegment_ = i;
+          break;
+        }
+      }
+    }
+
+    if (direction_ === 'up') {
+      for (i = endHole_; i < nrCells_; i++) {
+        if (result.path[i] && (result.path[i].type === 'fixed')) {
+          endSegment_ = i;
+          break;
+        }
+      }
+    } else {
+      for (i = endHole_; i > 0; i--) {
+        if (result.path[i] && (result.path[i].type === 'fixed')) {
+          endSegment_ = i;
+          break;
+        }
+      }
+    }
+
   }
 
   result.select = function (cell) {
@@ -141,6 +178,14 @@ hidato.path = (function () {
     if (result.path[1]) {
       result.select(result.path[1]);
     }
+  };
+
+  result.startSegment = function () {
+    return result.path[startSegment_];
+  };
+
+  result.endSegment = function () {
+    return result.path[endSegment_];
   };
 
   return result;
