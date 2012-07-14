@@ -31,14 +31,18 @@ hidato.createStartAnimation = function (cell) {
     return drawingScheme_.getBeginColor(alpha) || drawingScheme_.beginColor || 'rgba(200,255,100,' + alpha + ')';
   };
 
-  result.animate = function (time) {
+  result.animate = function (coordCellConverter, time) {
     var
       NRCIRCLES = 5,
       i, r,
       radius,
       center = {},
-      rect = coordCellConverter_.celltoRect(cell_),
+      rect,
       timestep = result.getTimeStep(time);
+
+    coordCellConverter_ = coordCellConverter;
+
+    rect = coordCellConverter_.celltoRect(cell_);
 
     center.x = 0.5 * rect.x1 + 0.5 * rect.x2;
     center.y = 0.5 * rect.y1 + 0.5 * rect.y2;
@@ -113,13 +117,15 @@ hidato.createActiveSegmentAnimation = function (startCell, endCell) {
     startTime_ = startTime;
   };
 
-  result.animate = function (time) {
+  result.animate = function (coordCellConverter, time) {
     var
       rect;
 
     if (startCell_ === endCell_) {
       return;
     }
+
+    coordCellConverter_ = coordCellConverter;
 
     rect = coordCellConverter_.celltoRect(startCell_);
 
