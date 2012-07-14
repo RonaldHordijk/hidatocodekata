@@ -4,6 +4,9 @@
 function onLoad() {
   'use strict';
 
+  var
+    segmentAnimation_;
+
   window.requestAnimFrame = (function () {
     return (
       window.requestAnimationFrame ||
@@ -45,6 +48,7 @@ function onLoad() {
     }
 
     hidato.path.select(cell);
+    segmentAnimation_.update(hidato.path.startSegment(), hidato.path.endSegment());
   }
 
   function initialize() {
@@ -70,6 +74,9 @@ function onLoad() {
     hidato.drawer.backgroundAnimations.push(animation);
     animation = hidato.createEndAnimation(hidato.path.path[hidato.path.path.length - 1]);
     hidato.drawer.backgroundAnimations.push(animation);
+
+    segmentAnimation_ = hidato.createActiveSegmentAnimation(hidato.path.startSegment(), hidato.path.endSegment());
+    hidato.drawer.backgroundAnimations.push(segmentAnimation_);
 
     canvas.addEventListener("click", onclick, false);
 
