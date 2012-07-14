@@ -8,16 +8,17 @@ hidato.drawingScheme = (function () {
     result = {
       backgroundColor: 'black',
       lineColor: 'lime',
-      CellbackgroundColorFixed: 'rgb(25, 25, 25)',
-      CellbackgroundColorUsed: 'black',
-      CellbackgroundColorOpen: 'black',
+      cellbackgroundColorFixed: 'rgb(25, 25, 25)',
+      cellbackgroundColorUsed: 'black',
+      cellbackgroundColorOpen: 'black',
       fontColorFixed: 'blue',
       fontColorUsed: 'rgb(120,120,255)',
+      beginColor: 'rgb(120,200,120)',
     };
 
   result.drawCellBackgroundFixed = function (context, rect) {
     context.lineWidth = 1;
-    context.fillStyle = result.CellbackgroundColorFixed;
+    context.fillStyle = result.cellbackgroundColorFixed;
     context.strokeStyle = result.lineColor;
 
     context.beginPath();
@@ -25,6 +26,14 @@ hidato.drawingScheme = (function () {
     context.rect(rect.x1 + 3, rect.y1 + 3, rect.x2 - rect.x1 - 6, rect.y2 - rect.y1 - 6);
     context.fill();
     context.stroke();
+  };
+
+  result.getBeginColor = function (alpha) {
+    return 'rgba(120,200,120,' + alpha + ')';
+  };
+
+  result.getEndColor = function (alpha) {
+    return 'rgba(200,200,120,' + alpha + ')';
   };
 
   return result;
