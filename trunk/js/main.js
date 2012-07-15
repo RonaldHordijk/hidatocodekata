@@ -34,8 +34,8 @@ function onLoad() {
     if (canvas) {
       canvas.setAttribute('width', window.innerWidth);
       canvas.setAttribute('height', window.innerHeight);
-      hidato.boardCoordCellConverter.resize(canvas.width, canvas.heigth);
-      hidato.pathCoordCellConverter.resize(canvas.width, canvas.heigth);
+      hidato.boardCoordCellConverter.resize(canvas.width, canvas.height);
+      hidato.pathCoordCellConverter.resize(canvas.width, canvas.height);
     }
   };
 
