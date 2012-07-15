@@ -16,9 +16,8 @@ hidato.createStartAnimation = function (cell) {
     return context_ !== undefined;
   };
 
-  result.initialize = function (context, coordCellConverter, drawingScheme, startTime) {
+  result.initialize = function (context, drawingScheme, startTime) {
     context_ = context;
-    coordCellConverter_ = coordCellConverter;
     drawingScheme_ = drawingScheme;
     startTime_ = startTime;
   };
@@ -48,7 +47,7 @@ hidato.createStartAnimation = function (cell) {
     center.y = 0.5 * rect.y1 + 0.5 * rect.y2;
     radius = 0.7 * (rect.x2 - rect.x1);
 
-    context_.lineWidth = 0.25 * radius / NRCIRCLES;
+    context_.lineWidth = context_.lineWidth = Math.max(1, 0.25 * radius / NRCIRCLES);
 
     for (i = 0; i < NRCIRCLES; i++) {
       r = (i / NRCIRCLES + timestep) % 1;
@@ -76,10 +75,10 @@ hidato.createEndAnimation = function (cell) {
 
   result.baseinitialize = result.initialize;
 
-  result.initialize = function (context, coordCellConverter, drawingScheme, startTime) {
+  result.initialize = function (context, drawingScheme, startTime) {
     drawingScheme_ = drawingScheme;
 
-    result.baseinitialize(context, coordCellConverter, drawingScheme, startTime);
+    result.baseinitialize(context, drawingScheme, startTime);
   };
 
   result.getColor = function (alpha) {
@@ -110,9 +109,8 @@ hidato.createActiveSegmentAnimation = function (startCell, endCell) {
     return context_ !== undefined;
   };
 
-  result.initialize = function (context, coordCellConverter, drawingScheme, startTime) {
+  result.initialize = function (context, drawingScheme, startTime) {
     context_ = context;
-    coordCellConverter_ = coordCellConverter;
     drawingScheme_ = drawingScheme;
     startTime_ = startTime;
   };

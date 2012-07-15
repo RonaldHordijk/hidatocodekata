@@ -5,21 +5,22 @@ hidato.drawer = (function () {
   'use strict';
 
   var
-    result = {
-      backgroundAnimations: [],
-      foregroundAnimations: []
-    },
+    result = {},
     canvas_,
     context_,
     cells_,
     coordCellConverter_,
+    animationPool_,
     drawingScheme_;
 
-  result.initialize = function (canvas, drawingScheme) {
+  result.initialize = function (canvas, drawingScheme, animationPool) {
     canvas_ = canvas;
     context_ = canvas_.getContext("2d");
 
     drawingScheme_ = drawingScheme;
+    animationPool_ = animationPool;
+
+    animationPool.initialize(context_, drawingScheme);
   };
 
   function drawCellBackground() {
@@ -73,39 +74,6 @@ hidato.drawer = (function () {
     });
   }
 
-  function removeAnimation(animation) {
-    var
-      i;
-
-    for (i = result.backgroundAnimations.length - 1; i >= 0; i++) {
-      if (result.backgroundAnimations === animation) {
-        result.backgroundAnimations.splice(i, 1);
-      }
-    }
-
-    for (i = result.foregroundAnimations.length - 1; i >= 0; i++) {
-      if (result.foregroundAnimations === animation) {
-        result.foregroundAnimations.splice(i, 1);
-      }
-    }
-
-  }
-
-  function drawAfterCellBackground(time) {
-    result.backgroundAnimations.forEach(function (animation) {
-      if (!animation.isInitialized()) {
-        animation.initialize(context_, coordCellConverter_, drawingScheme_,  time);
-      }
-
-      animation.animate(coordCellConverter_, time);
-
-      if (animation.isFinished(time)) {
-        removeAnimation(animation);
-      }
-
-    });
-  }
-
   function drawCellForeground() {
     var
       rect = coordCellConverter_.celltoRect(cells_[0] || cells_[1]),
@@ -140,10 +108,6 @@ hidato.drawer = (function () {
     });
   }
 
-  function drawAfterCellForeground(time) {
-
-  }
-
   result.drawBackground = function () {
     if (drawingScheme_.drawBackground) {
       drawingScheme_.drawBackground(context_, canvas_.width, canvas_.height);
@@ -158,21 +122,9 @@ hidato.drawer = (function () {
     coordCellConverter_ = coordCellConverter;
 
     drawCellBackground();
-    drawAfterCellBackground(time);
+    animationPool_.drawBackgroundAnimations(coordCellConverter, time);
     drawCellForeground();
-    drawAfterCellForeground(time);
-
-  };
-
-  result.draw = function (board, time) {
-    cells_ = board.cells;
-
-    result.drawBackground();
-    drawCellBackground();
-    drawAfterCellBackground(time);
-    drawCellForeground();
-    drawAfterCellForeground(time);
-
+    animationPool_.drawForegroundAnimations(coordCellConverter, time);
   };
 
   return result;

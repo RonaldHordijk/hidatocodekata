@@ -22,6 +22,7 @@ function onLoad() {
 
   function animate(time) {
     window.requestAnimFrame(animate);
+
     hidato.drawer.drawBackground();
     hidato.drawer.drawCells(hidato.board.cells, hidato.boardCoordCellConverter, time);
     hidato.drawer.drawCells(hidato.path.path, hidato.pathCoordCellConverter, time);
@@ -31,12 +32,15 @@ function onLoad() {
     var
       canvas = document.getElementById('mycanvas');
 
-    if (canvas) {
-      canvas.setAttribute('width', window.innerWidth);
-      canvas.setAttribute('height', window.innerHeight);
-      hidato.boardCoordCellConverter.resize(canvas.width, canvas.height);
-      hidato.pathCoordCellConverter.resize(canvas.width, canvas.height);
+    if (!canvas) {
+      return;
     }
+
+    canvas.setAttribute('width', window.innerWidth);
+    canvas.setAttribute('height', window.innerHeight);
+
+    hidato.boardCoordCellConverter.resize(canvas.width, canvas.height);
+    hidato.pathCoordCellConverter.resize(canvas.width, canvas.height);
   };
 
   function onclick(event) {
@@ -68,15 +72,12 @@ function onLoad() {
     hidato.path.initialize(hidato.board);
     hidato.boardCoordCellConverter.initialize(hidato.board, canvas.width, canvas.height);
     hidato.pathCoordCellConverter.initialize(hidato.path, canvas.width, canvas.height);
-    hidato.drawer.initialize(canvas, hidato.drawingScheme);
+    hidato.drawer.initialize(canvas, hidato.drawingScheme, hidato.animationPool);
 
-    animation = hidato.createStartAnimation(hidato.path.path[1]);
-    hidato.drawer.backgroundAnimations.push(animation);
-    animation = hidato.createEndAnimation(hidato.path.path[hidato.path.path.length - 1]);
-    hidato.drawer.backgroundAnimations.push(animation);
+    hidato.animationPool.addStartAnimation(hidato.path.path[1]);
+    hidato.animationPool.addEndAnimation(hidato.path.path[hidato.path.path.length - 1]);
 
-    segmentAnimation_ = hidato.createActiveSegmentAnimation(hidato.path.startSegment(), hidato.path.endSegment());
-    hidato.drawer.backgroundAnimations.push(segmentAnimation_);
+    segmentAnimation_ = hidato.animationPool.addSegmentAnimation(hidato.path.startSegment(), hidato.path.endSegment());
 
     canvas.addEventListener("click", onclick, false);
 
