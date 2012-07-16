@@ -151,3 +151,55 @@ hidato.createActiveSegmentAnimation = function (startCell, endCell) {
 
   return result;
 };
+
+hidato.createSelectAnimation = function (cell) {
+  'use strict';
+
+  var
+    context_,
+    coordCellConverter_,
+    drawingScheme_,
+    cell_ = cell,
+    startTime_,
+    result = {};
+
+  result.isInitialized = function () {
+    return context_ !== undefined;
+  };
+
+  result.initialize = function (context, drawingScheme, startTime) {
+    context_ = context;
+    drawingScheme_ = drawingScheme;
+    startTime_ = startTime;
+  };
+
+  result.animate = function (coordCellConverter, time) {
+    var
+      alpha,
+      radius,
+      center = {},
+      rect;
+
+    coordCellConverter_ = coordCellConverter;
+
+    rect = coordCellConverter_.celltoRect(cell_);
+
+    center.x = 0.5 * rect.x1 + 0.5 * rect.x2;
+    center.y = 0.5 * rect.y1 + 0.5 * rect.y2;
+    radius = 0.5 * (1 + 0.007 * (time - startTime_)) * (rect.x2 - rect.x1);
+    alpha = 1 - 0.004 * (time - startTime_);
+
+    context_.lineWidth = 2;
+    context_.strokeStyle = 'rgba(200,200,255,' + alpha + ')';
+    context_.beginPath();
+    context_.arc(center.x, center.y, radius, 0, 2 * Math.PI, true);
+    context_.stroke();
+
+  };
+
+  result.isFinished = function (time) {
+    return (time - startTime_) > 1000;
+  };
+
+  return result;
+};
