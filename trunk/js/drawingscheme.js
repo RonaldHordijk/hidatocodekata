@@ -11,9 +11,12 @@ hidato.drawingScheme = (function () {
       cellbackgroundColorFixed: 'rgb(25, 25, 25)',
       cellbackgroundColorUsed: 'black',
       cellbackgroundColorOpen: 'black',
+      cellbackgroundColorError: 'black',
       fontColorFixed: 'blue',
       fontColorUsed: 'rgb(120,120,255)',
+      fontColorError: 'red',
       beginColor: 'rgb(120,200,120)',
+
     };
 
   result.drawCellBackgroundFixed = function (context, rect) {
