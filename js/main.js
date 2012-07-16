@@ -53,6 +53,8 @@ function onLoad() {
 
     hidato.path.select(cell);
     segmentAnimation_.update(hidato.path.startSegment(), hidato.path.endSegment());
+
+    hidato.animationPool.addSelectAnimation(cell);
   }
 
   function initialize() {
