@@ -61,6 +61,13 @@ hidato.drawer = (function () {
         }
 
         context_.fillStyle = drawingScheme_.cellbackgroundColorOpen || 'white';
+      } else if (cell.type === 'error') {
+        if (drawingScheme_.drawCellBackgroundError) {
+          drawingScheme_.drawCellBackgroundError(context_, rect, cell);
+          return;
+        }
+
+        context_.fillStyle = drawingScheme_.cellbackgroundColorError || 'white';
       }
 
       // default handling    
@@ -103,6 +110,11 @@ hidato.drawer = (function () {
 
       if (cell.type === 'used') {
         context_.fillStyle = drawingScheme_.fontColorUsed || "blue";
+        context_.fillText(cell.val, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2 + textSize));
+      }
+
+      if (cell.type === 'error') {
+        context_.fillStyle = drawingScheme_.fontColorError || "red";
         context_.fillText(cell.val, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2 + textSize));
       }
     });
