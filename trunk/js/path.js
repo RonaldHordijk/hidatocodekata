@@ -29,7 +29,7 @@ hidato.path = (function () {
       empty = false,
       i;
 
-    for (i = 0; i < nrCells_; i++) {
+    for (i = 1; i < nrCells_; i++) {
       if (!result.path[i]) {
         empty = true;
         break;
@@ -37,6 +37,20 @@ hidato.path = (function () {
     }
 
     return !empty;
+  }
+  function checkSolution(cell) {
+    var
+      errors = false,
+      i;
+
+    for (i = 1; i < nrCells_; i++) {
+      if ((result.path[i].val) && (result.path[i].val !== result.path[i].sol)) {
+        result.path[i].type = 'error';
+        errors = true;
+      }
+    }
+
+    return !errors;
   }
 
   function findHole(cell) {
@@ -149,7 +163,12 @@ hidato.path = (function () {
           findHole(cell);
         }
       }
-    } else if (cell.type === 'used') {
+
+      if (allFilled()) {
+        checkSolution();
+      }
+
+    } else if ((cell.type === 'used') || (cell.type === 'error')) {
       cell.type = 'open';
       result.path[cell.val] = undefined;
       startHole_ = cell.val;
