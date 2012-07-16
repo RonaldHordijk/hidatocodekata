@@ -21,8 +21,8 @@ hidato.animationPool = (function () {
     var
       i;
 
-    for (i = animations.length - 1; i >= 0; i++) {
-      if (animations === animation) {
+    for (i = animations.length - 1; i >= 0; i--) {
+      if (animations[i] === animation) {
         animations.splice(i, 1);
       }
     }
@@ -37,7 +37,7 @@ hidato.animationPool = (function () {
       animation.animate(coordCellConverter, time);
 
       if (animation.isFinished(time)) {
-        removeAnimation(animation);
+        removeAnimation(animations, animation);
       }
     });
   }
@@ -63,6 +63,15 @@ hidato.animationPool = (function () {
   result.addSegmentAnimation = function (cell1, cell2) {
     var
       animation = hidato.createActiveSegmentAnimation(cell1, cell2);
+
+    result.backgroundAnimations.push(animation);
+
+    return animation;
+  };
+
+  result.addSelectAnimation = function (cell) {
+    var
+      animation = hidato.createSelectAnimation(cell);
 
     result.backgroundAnimations.push(animation);
 
