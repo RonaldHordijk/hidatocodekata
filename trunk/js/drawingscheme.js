@@ -6,6 +6,7 @@ hidato.drawingScheme = (function () {
 
   var
     result = {
+      name: 'dark',
       backgroundColor: 'black',
       lineColor: 'lime',
       cellbackgroundColorFixed: 'rgb(25, 25, 25)',
@@ -37,6 +38,33 @@ hidato.drawingScheme = (function () {
 
   result.getEndColor = function (alpha) {
     return 'rgba(200,200,120,' + alpha + ')';
+  };
+
+  return result;
+}());
+
+hidato.drawingSchemeLight = (function () {
+  'use strict';
+
+  var
+    result = {
+      name: 'Light',
+      backgroundColor: 'rgb(255,245,205)',
+      lineColor: 'black',
+      cellbackgroundColorFixed: 'rgb(236, 232, 129)',
+      fontColorFixed: 'rgb(48,118,168)',
+      fontColorUsed: 'rgb(138,202,247)',
+      fontColorError: 'red',
+      beginColor: 'rgb(120,200,120)',
+
+    };
+
+  result.getBeginColor = function (alpha) {
+    return 'rgba(130,255,186,' + alpha + ')';
+  };
+
+  result.getEndColor = function (alpha) {
+    return 'rgba(200,200,220,' + alpha + ')';
   };
 
   return result;
