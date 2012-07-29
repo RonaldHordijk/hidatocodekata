@@ -1,0 +1,4 @@
+this dirctory contains
+
+phantomjs.exe
+a phantom verions of jslint
