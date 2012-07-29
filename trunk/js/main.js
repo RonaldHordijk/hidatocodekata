@@ -1,7 +1,8 @@
 /*jslint browser: true, windows: true, es5: true, nomen: false, plusplus: false, maxerr: 500, indent: 2*/
 /*global window: false, hidato: false */
 
-function onLoad() {
+
+(function setup() {
   'use strict';
 
   var
@@ -28,24 +29,25 @@ function onLoad() {
     hidato.drawer.drawCells(hidato.path.path, hidato.pathCoordCellConverter, time);
   }
 
-  window.onresize = function () {
-    var
-      canvas = document.getElementById('mycanvas');
+  hidato.windowresize = function () {
+    hidato.resize(window.innerWidth, window.innerHeight);
+  };
 
-    if (!canvas) {
+  hidato.resize = function (width, height) {
+    if (!hidato.canvas) {
       return;
     }
 
-    canvas.setAttribute('width', window.innerWidth);
-    canvas.setAttribute('height', window.innerHeight);
+    hidato.canvas.setAttribute('width', width);
+    hidato.canvas.setAttribute('height', height);
 
-    hidato.boardCoordCellConverter.resize(canvas.width, canvas.height);
-    hidato.pathCoordCellConverter.resize(canvas.width, canvas.height);
+    hidato.boardCoordCellConverter.resize(width, height);
+    hidato.pathCoordCellConverter.resize(width, height);
   };
 
   function onclick(event) {
     var
-      cell = hidato.boardCoordCellConverter.getCellFromCoordinates({x: event.pageX, y: event.pageY});
+      cell = hidato.boardCoordCellConverter.getCellFromCoordinates({x: event.offsetX || event.pageX, y: event.offsetY || event.pageY});
 
     if (!cell) {
       return;
@@ -57,44 +59,57 @@ function onLoad() {
     hidato.animationPool.addSelectAnimation(cell);
   }
 
-  function initialize() {
-    var
-      canvasDiv = document.getElementById('canvasdiv'),
-      canvas,
-      animation,
-      context;
+  hidato.changepuzzle = function (puzzledata) {
 
-    canvas = document.createElement('canvas');
-    canvas.setAttribute('id', 'mycanvas');
-    canvas.setAttribute('width', window.innerWidth);
-    canvas.setAttribute('height', window.innerHeight);
-    canvasDiv.appendChild(canvas);
-
-    hidato.board.initialize(hidato.data[1]);
+    hidato.board.initialize(puzzledata);
     hidato.path.initialize(hidato.board);
-    hidato.boardCoordCellConverter.initialize(hidato.board, canvas.width, canvas.height);
-    hidato.pathCoordCellConverter.initialize(hidato.path, canvas.width, canvas.height);
-    hidato.drawer.initialize(canvas, hidato.drawingScheme, hidato.animationPool);
+    hidato.boardCoordCellConverter.initialize(hidato.board, hidato.canvas.width, hidato.canvas.height);
+    hidato.pathCoordCellConverter.initialize(hidato.path, hidato.canvas.width, hidato.canvas.height);
+    hidato.drawer.initialize(hidato.canvas, hidato.drawingSchemeLight, hidato.animationPool);
+
+    hidato.animationPool.clear();
 
     hidato.animationPool.addStartAnimation(hidato.path.path[1]);
     hidato.animationPool.addEndAnimation(hidato.path.path[hidato.path.path.length - 1]);
 
     segmentAnimation_ = hidato.animationPool.addSegmentAnimation(hidato.path.startSegment(), hidato.path.endSegment());
+  };
 
-    canvas.addEventListener("click", onclick, false);
+  hidato.setupCanvas = function (divname, width, height) {
+    var
+      canvasDiv = document.getElementById(divname),
+      animation,
+      context;
+
+    hidato.canvas = document.createElement('canvas');
+    hidato.canvas.setAttribute('id', 'mycanvas');
+    hidato.canvas.setAttribute('width', width);
+    hidato.canvas.setAttribute('height', height);
+    canvasDiv.appendChild(hidato.canvas);
+
+    hidato.changepuzzle(hidato.data[2]);
+
+    hidato.canvas.addEventListener("click", onclick, false);
 
     animate(Date.now());
-  }
+  };
 
-  function onDeviceReady() {
-    initialize();
-  }
+}());
 
+function onLoad() {
+  'use strict';
 
   //  if (cordova !== undefined) {
   //    document.addEventListener("deviceready", onDeviceReady, false);
   //  } else {
-  initialize();
+  hidato.setupCanvas('canvasdiv', window.innerWidth, window.innerHeight);
+  window.onresize = hidato.windowresize();
   //  }
+}
 
+function onDeviceReady() {
+  'use strict';
+
+  hidato.setupCanvas('canvasdiv', window.innerWidth, window.innerHeight);
+  window.onresize = hidato.windowresize();
 }
