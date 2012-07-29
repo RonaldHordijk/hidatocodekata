@@ -73,9 +73,14 @@ hidato.animationPool = (function () {
     var
       animation = hidato.createSelectAnimation(cell);
 
-    result.backgroundAnimations.push(animation);
+    result.foregroundAnimations.push(animation);
 
     return animation;
+  };
+
+  result.clear = function () {
+    result.backgroundAnimations = [];
+    result.foregroundAnimations = [];
   };
 
   result.drawForegroundAnimations = function (coordCellConverter, time) {
