@@ -1,0 +1,3 @@
+this dirctory contains also
+
+sencha touch 2.01
