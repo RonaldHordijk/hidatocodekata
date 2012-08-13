@@ -1,23 +1,28 @@
+/*jslint browser: true, windows: true, es5: true, nomen: false, plusplus: false, maxerr: 500, indent: 2*/
+/*global hidato: false */
+
 Ext.setup({
   onReady: function() {
-    var 
-      activepuzz = hidato.data[0];
+    'use strict';
     
-    function resizeCanvas () {
-      canvas = document.getElementById('drawingcanvas');
-      if (canvas) {
-        canvas.width = canvas.parentElement.parentElement.clientWidth;
-        canvas.height = canvas.parentElement.parentElement.clientHeight;
+    var
+      viewport,     
+      activepuzz = hidato.data[0];
 
-//        plaxis.drawingCanvas.resize(canvas.width, canvas.height);
-      }      
+    function resizeCanvas () {
+      hidato.resize(Math.min(Ext.get('canvaspanel').getWidth(), window.innerWidth), 
+                    Math.min(Ext.get('canvaspanel').getHeight(), window.innerHeight));   
     }
     
-    var 
-      viewport = Ext.create('Ext.Panel', {
+    viewport = Ext.create('Ext.Panel', {
         fullscreen: true,
         layout: 'card'
       });    
+
+    viewport.isMainForm = function () {
+      return viewport.getActiveItem() === viewport.mainPanel;     
+    };
+   
 
     var 
       resultButton = new Ext.Button({
@@ -47,22 +52,29 @@ Ext.setup({
 
     var 
       canvasPanel = Ext.create('Ext.Panel', {
-        style: "background-color: #FF0",
-        html: '<div id="drawingcanvas" style="background-color: #000; position: absolute; width: 100%; height: 100%">',
-      });
+        layout: 'fit',
+        flex: 10,
+        id: 'canvaspanel',
+        style: "background-color: #FFF",
+        listeners: {
+          resize: function () {
+            resizeCanvas();   
+          }
+       }   
+    });
 
     viewport.mainPanel = Ext.create('Ext.Panel', {
-       fullscreen: true,
-       layout: {
-         type: 'vbox',
-         align: 'stretch'
-       },
-       items: [mainToolbar, canvasPanel],
-        listeners: {
-          show: function () {
-            mainToolbar.setTitle('Hidato [' + activepuzz.name + '<img style = "height: 0.7em;" src="css/img/star_' + activepuzz.level +'.png"> ]');
-          }  
-        }
+      fullscreen: true,
+      layout: {
+        type: 'vbox',
+        align: 'stretch'
+      },
+      items: [mainToolbar, canvasPanel],
+      listeners: {
+        show: function () {
+          mainToolbar.setTitle('Hidato [' + activepuzz.name + '<img style = "height: 0.7em;" src="css/img/star_' + activepuzz.level +'.png"> ]');
+        }  
+      }
     });
 
     var 
@@ -186,7 +198,7 @@ Ext.setup({
         pinHeaders: true,
         grouped: true,
         store: puzzleStore,
-        itemTpl: '<span style="width:30%; display:inline-block;">{name}</span><span style="width:30%; display:inline-block;">({nCols}x{(nRows})</span> <img style = "height: 2em;" src="css/img/star_{level}.png">',
+        itemTpl: '<span style="width:15%; display:inline-block;">{name}</span><span style="width:25%; display:inline-block;">({nCols}x{(nRows})</span> <img style = "height: 1em;" src="css/img/star_{level}.png">',
         items: [{
             xtype: 'toolbar',
             docked: 'top',        
@@ -197,6 +209,7 @@ Ext.setup({
         listeners: {
             select: function (list, model) {
               activepuzz = model.raw;
+              hidato.changepuzzle(activepuzz);
               viewport.setActiveItem(viewport.mainPanel, {type: 'slide', direction: 'right'});
             } // select
         } // listeners
@@ -267,8 +280,27 @@ Ext.setup({
        items: [settingsToolbar, settingsform]     
     });
 
+    hidato.viewport = viewport;
+    
     viewport.show();
-    viewport.setActiveItem(puzzleForm, {type: 'slide', direction: 'right'});
-   
+    viewport.setActiveItem(viewport.mainPanel, {type: 'slide', direction: 'right'});
+
+    hidato.setupCanvas(canvasPanel.getId(), Ext.get('canvaspanel').getWidth(), Ext.get('canvaspanel').getHeight());   
+
+    function onBackButton(event) {
+      if (!viewport.isMainForm()) {
+        viewport.setActiveItem(viewport.mainPanel, {type: 'slide', direction: 'right'});
+      } else {
+        navigator.app.exitApp();
+      } 
+    }
+
+    function onDeviceReady() {
+      document.addEventListener("backbutton", onBackButton, false);
+    }
+
+    document.addEventListener("backbutton", onBackButton, false);
+    document.addEventListener("deviceready", onDeviceReady, false);
+    
   }
 });
