@@ -1,4 +1,4 @@
-/*jslint browser: true, windows: true, es5: true, nomen: false, plusplus: false, maxerr: 500, indent: 2*/
+/*jslint browser: true, windows: true, es5: true, nomen: true, plusplus: false, maxerr: 500, indent: 2*/
 /*global hidato: false */
 
 hidato.drawer = (function () {
@@ -46,28 +46,35 @@ hidato.drawer = (function () {
           return;
         }
 
-        context_.fillStyle = drawingScheme_.cellbackgroundColorFixed || 'white';
+        context_.fillStyle = drawingScheme_.cellbackgroundColorFixed || drawingScheme_.backgroundColor || 'white';
       } else if (cell.type === 'used') {
         if (drawingScheme_.drawCellBackgroundUsed) {
           drawingScheme_.drawCellBackgroundUsed(context_, rect, cell);
           return;
         }
 
-        context_.fillStyle = drawingScheme_.cellbackgroundColorUsed || 'white';
+        context_.fillStyle = drawingScheme_.cellbackgroundColorUsed || drawingScheme_.backgroundColor || 'white';
       } else if (cell.type === 'open') {
         if (drawingScheme_.drawCellBackgroundOpen) {
           drawingScheme_.drawCellBackgroundOpen(context_, rect, cell);
           return;
         }
 
-        context_.fillStyle = drawingScheme_.cellbackgroundColorOpen || 'white';
+        context_.fillStyle = drawingScheme_.cellbackgroundColorOpen || drawingScheme_.backgroundColor || 'white';
+      } else if ((cell.type === 'ref-open') || (cell.type === 'ref-used')) {
+        if (drawingScheme_.drawCellBackgroundRef) {
+          drawingScheme_.drawCellBackgroundRef(context_, rect, cell);
+          return;
+        }
+
+        context_.fillStyle = drawingScheme_.cellbackgroundColorRef || drawingScheme_.backgroundColor || 'white';
       } else if (cell.type === 'error') {
         if (drawingScheme_.drawCellBackgroundError) {
           drawingScheme_.drawCellBackgroundError(context_, rect, cell);
           return;
         }
 
-        context_.fillStyle = drawingScheme_.cellbackgroundColorError || 'white';
+        context_.fillStyle = drawingScheme_.cellbackgroundColorError || drawingScheme_.backgroundColor || 'white';
       }
 
       // default handling    
@@ -108,8 +115,13 @@ hidato.drawer = (function () {
         context_.fillText(cell.sol, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2 + textSize));
       }
 
-      if (cell.type === 'used') {
+      if ((cell.type === 'used') || (cell.type === 'ref-used')) {
         context_.fillStyle = drawingScheme_.fontColorUsed || "blue";
+        context_.fillText(cell.val, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2 + textSize));
+      }
+
+      if (cell.type === 'ref-open') {
+        context_.fillStyle = drawingScheme_.fontColorOpen || "black";
         context_.fillText(cell.val, 0.5 * (rect.x1 + rect.x2), 0.5 * (rect.y1 + rect.y2 + textSize));
       }
 
