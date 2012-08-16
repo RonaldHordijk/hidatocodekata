@@ -46,35 +46,35 @@ hidato.drawer = (function () {
           return;
         }
 
-        context_.fillStyle = drawingScheme_.cellbackgroundColorFixed || drawingScheme_.backgroundColor || 'white';
+        context_.fillStyle = drawingScheme_.cellbackgroundColorFixed || drawingScheme_.cellbackgroundColor || drawingScheme_.backgroundColor || 'white';
       } else if (cell.type === 'used') {
         if (drawingScheme_.drawCellBackgroundUsed) {
           drawingScheme_.drawCellBackgroundUsed(context_, rect, cell);
           return;
         }
 
-        context_.fillStyle = drawingScheme_.cellbackgroundColorUsed || drawingScheme_.backgroundColor || 'white';
+        context_.fillStyle = drawingScheme_.cellbackgroundColorUsed || drawingScheme_.cellbackgroundColor || drawingScheme_.backgroundColor || 'white';
       } else if (cell.type === 'open') {
         if (drawingScheme_.drawCellBackgroundOpen) {
           drawingScheme_.drawCellBackgroundOpen(context_, rect, cell);
           return;
         }
 
-        context_.fillStyle = drawingScheme_.cellbackgroundColorOpen || drawingScheme_.backgroundColor || 'white';
+        context_.fillStyle = drawingScheme_.cellbackgroundColorOpen || drawingScheme_.cellbackgroundColor || drawingScheme_.backgroundColor || 'white';
       } else if ((cell.type === 'ref-open') || (cell.type === 'ref-used')) {
         if (drawingScheme_.drawCellBackgroundRef) {
           drawingScheme_.drawCellBackgroundRef(context_, rect, cell);
           return;
         }
 
-        context_.fillStyle = drawingScheme_.cellbackgroundColorRef || drawingScheme_.backgroundColor || 'white';
+        context_.fillStyle = drawingScheme_.cellbackgroundColorRef || drawingScheme_.cellbackgroundColor || drawingScheme_.backgroundColor || 'white';
       } else if (cell.type === 'error') {
         if (drawingScheme_.drawCellBackgroundError) {
           drawingScheme_.drawCellBackgroundError(context_, rect, cell);
           return;
         }
 
-        context_.fillStyle = drawingScheme_.cellbackgroundColorError || drawingScheme_.backgroundColor || 'white';
+        context_.fillStyle = drawingScheme_.cellbackgroundColorError || drawingScheme_.cellbackgroundColor || drawingScheme_.backgroundColor || 'white';
       }
 
       // default handling    

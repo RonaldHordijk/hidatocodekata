@@ -6,7 +6,7 @@ hidato.drawingScheme = (function () {
 
   var
     result = {
-      name: 'dark',
+      name: 'Dark',
       backgroundColor: 'black',
       lineColor: 'lime',
       cellbackgroundColorFixed: 'rgb(25, 25, 25)',
@@ -52,6 +52,7 @@ hidato.drawingSchemeLight = (function () {
       backgroundColor: 'rgb(255,245,205)',
       lineColor: 'black',
       cellbackgroundColorFixed: 'rgb(236, 232, 129)',
+      cellbackgroundColor: 'rgb(248, 248, 179)', 
       fontColorFixed: 'rgb(48,118,168)',
       fontColorUsed: 'rgb(138,202,247)',
       fontColorError: 'red',
