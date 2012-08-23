@@ -8,7 +8,7 @@ hidato.path = (function () {
     activeCell_,
     direction_ = 'up',
     nrCells_ = 0,
-    startHole_,
+    nextPick_,
     startSegment_,
     endSegment_,
     result = {
@@ -62,39 +62,39 @@ hidato.path = (function () {
       i,
       temp;
 
-    startHole_ = -1;
+    nextPick_ = -1;
 
     if (direction_ === 'up') {
       for (i = startPoint; i < nrCells_; i++) {
         if (result.path[i].type === 'ref-open') {
-          startHole_ = i;
+          nextPick_ = i;
           break;
         }
       }
     } else {
       for (i = startPoint; i > 1; i--) {
         if (result.path[i].type === 'ref-open') {
-          startHole_ = i;
+          nextPick_ = i;
           break;
         }
       }
     }
 
     // no hole go the other direction
-    if (startHole_ < 1) {
+    if (nextPick_ < 1) {
       flipDirection();
       findHole(startPoint);
     }
 
     //hole found mark segment
 
-    for (i = startHole_; i > 0; i--) {
+    for (i = nextPick_; i > 0; i--) {
       if (result.path[i].type === 'fixed') {
         startSegment_ = i;
         break;
       }
     }
-    for (i = startHole_; i < nrCells_; i++) {
+    for (i = nextPick_; i < nrCells_; i++) {
       if (result.path[i].type === 'fixed') {
         endSegment_ = i;
         break;
@@ -124,21 +124,29 @@ hidato.path = (function () {
       }
     } else if (cell.type === 'open') {
       cell.type = 'used';
-      cell.val = startHole_;
-      result.path[startHole_].type = 'used';
-      result.path[startHole_].val = startHole_;
+      cell.val = nextPick_;
+      result.path[nextPick_].type = 'used';
+      result.path[nextPick_].val = nextPick_;
+      result.path[nextPick_].cell = cell;
 
       if (allFilled()) {
-        startHole_ = -1;
+        nextPick_ = -1;
       } else {
-        findHole(startHole_);
+        findHole(nextPick_);
       }
 
       if (allFilled()) {
         checkSolution();
       }
+    } else if (cell.type === 'ref-open') {
+      findHole(cell.val);
 
     } else if ((cell.type === 'used') || (cell.type === 'error')) {
+      
+      if (cell.cell) { // reference cell
+        cell = cell.cell;
+      }
+      
       cell.type = 'open';
       result.path[cell.val].type = 'ref-open';
 
@@ -179,7 +187,7 @@ hidato.path = (function () {
   };
 
   result.nextSelect = function () {
-    return startHole_;
+    return nextPick_;
   };
   
   return result;
