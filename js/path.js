@@ -58,21 +58,21 @@ hidato.path = (function () {
     return !errors;
   }
 
-  function findHole(cell) {
+  function findHole(startPoint) {
     var
       i;
 
     startHole_ = -1;
 
     if (direction_ === 'up') {
-      for (i = cell.sol; i < nrCells_; i++) {
+      for (i = startPoint; i < nrCells_; i++) {
         if (result.path[i].type === 'ref-open') {
           startHole_ = i;
           break;
         }
       }
     } else {
-      for (i = cell.sol; i > 1; i--) {
+      for (i = startPoint; i > 1; i--) {
         if (result.path[i].type === 'ref-open') {
           startHole_ = i;
           break;
@@ -83,7 +83,7 @@ hidato.path = (function () {
     // no hole go the other direction
     if (startHole_ < 1) {
       flipDirection();
-      findHole(cell);
+      findHole(startPoint);
     }
 
     // find end;    
@@ -150,7 +150,7 @@ hidato.path = (function () {
       }
 
       if (!allFilled()) {
-        findHole(cell);
+        findHole(cell.sol);
       }
     } else if (cell.type === 'open') {
       cell.type = 'used';
@@ -164,7 +164,7 @@ hidato.path = (function () {
           startHole_ = -1;
           endHole_ = -1;
         } else {
-          findHole(cell);
+          findHole(startHole_);
         }
       }
 
