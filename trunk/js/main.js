@@ -1,4 +1,4 @@
-/*jslint browser: true, windows: true, es5: true, nomen: false, plusplus: false, maxerr: 500, indent: 2*/
+/*jslint browser: true, windows: true, es5: true, nomen: true, maxerr: 500, indent: 2*/
 /*global window: false, hidato: false */
 
 
@@ -24,6 +24,8 @@
   function animate(time) {
     window.requestAnimFrame(animate);
 
+    time = time || Date.now();
+
     hidato.drawer.drawBackground();
     hidato.drawer.drawCells(hidato.board.cells, hidato.boardCoordCellConverter, time);
     hidato.drawer.drawCells(hidato.path.path, hidato.pathCoordCellConverter, time);
@@ -47,16 +49,25 @@
 
   function onclick(event) {
     var
-      cell = hidato.boardCoordCellConverter.getCellFromCoordinates({x: event.offsetX || event.pageX, y: event.offsetY || event.pageY});
+      cell;
 
+    if (!hidato.viewport.isMainForm()) {
+      return;
+    }
+     
+    cell = hidato.boardCoordCellConverter.getCellFromCoordinates({x: event.offsetX || event.pageX, y: event.offsetY || event.pageY});
+    
     if (!cell) {
       return;
     }
 
     hidato.path.select(cell);
+
     segmentAnimation_.update(hidato.path.startSegment(), hidato.path.endSegment());
 
     hidato.animationPool.addSelectAnimation(cell);
+    
+    hidato.pathCoordCellConverter.setNextAdd(hidato.path.nextSelect());
   }
 
   hidato.changepuzzle = function (puzzledata) {
@@ -103,7 +114,7 @@ function onLoad() {
   //    document.addEventListener("deviceready", onDeviceReady, false);
   //  } else {
   hidato.setupCanvas('canvasdiv', window.innerWidth, window.innerHeight);
-  window.onresize = hidato.windowresize();
+  window.onresize = hidato.windowresize;
   //  }
 }
 
@@ -111,5 +122,5 @@ function onDeviceReady() {
   'use strict';
 
   hidato.setupCanvas('canvasdiv', window.innerWidth, window.innerHeight);
-  window.onresize = hidato.windowresize();
+  window.onresize = hidato.windowresize;
 }
