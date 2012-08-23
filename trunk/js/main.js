@@ -58,8 +58,13 @@
     cell = hidato.boardCoordCellConverter.getCellFromCoordinates({x: event.offsetX || event.pageX, y: event.offsetY || event.pageY});
     
     if (!cell) {
+      cell = hidato.pathCoordCellConverter.getCellFromCoordinates({x: event.offsetX || event.pageX, y: event.offsetY || event.pageY});
+    }
+
+    if (!cell) {
       return;
     }
+
 
     hidato.path.select(cell);
 
