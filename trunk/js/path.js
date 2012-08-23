@@ -9,7 +9,6 @@ hidato.path = (function () {
     direction_ = 'up',
     nrCells_ = 0,
     startHole_,
-    endHole_,
     startSegment_,
     endSegment_,
     result = {
@@ -60,7 +59,8 @@ hidato.path = (function () {
 
   function findHole(startPoint) {
     var
-      i;
+      i,
+      temp;
 
     startHole_ = -1;
 
@@ -86,56 +86,26 @@ hidato.path = (function () {
       findHole(startPoint);
     }
 
-    // find end;    
-    if (direction_ === 'up') {
-      for (i = startHole_; i < nrCells_; i++) {
-        if (result.path[i].type !== 'ref-open') {
-          endHole_ = i;
-          break;
-        }
-      }
-    } else {
-      for (i = startHole_; i > 1; i--) {
-        if (result.path[i].type !== 'ref-open') {
-          endHole_ = i;
-          break;
-        }
-      }
-    }
-
     //hole found mark segment
 
-    if (direction_ === 'up') {
-      for (i = startHole_; i > 0; i--) {
-        if (result.path[i].type === 'fixed') {
-          startSegment_ = i;
-          break;
-        }
+    for (i = startHole_; i > 0; i--) {
+      if (result.path[i].type === 'fixed') {
+        startSegment_ = i;
+        break;
       }
-    } else {
-      for (i = startHole_; i < nrCells_; i++) {
-        if (result.path[i].type === 'fixed') {
-          startSegment_ = i;
-          break;
-        }
+    }
+    for (i = startHole_; i < nrCells_; i++) {
+      if (result.path[i].type === 'fixed') {
+        endSegment_ = i;
+        break;
       }
     }
 
-    if (direction_ === 'up') {
-      for (i = endHole_; i < nrCells_; i++) {
-        if (result.path[i].type === 'fixed') {
-          endSegment_ = i;
-          break;
-        }
-      }
-    } else {
-      for (i = endHole_; i > 0; i--) {
-        if (result.path[i].type === 'fixed') {
-          endSegment_ = i;
-          break;
-        }
-      }
-    }
+   if (direction_ !== 'up') {
+     temp = startSegment_;
+     startSegment_ = endSegment_;
+     endSegment_ = temp;
+   }
   }
 
   result.select = function (cell) {
@@ -158,15 +128,10 @@ hidato.path = (function () {
       result.path[startHole_].type = 'used';
       result.path[startHole_].val = startHole_;
 
-      startHole_ = (direction_ === 'up') ? startHole_ + 1 : startHole_ - 1;
-
-      if (startHole_ === endHole_) {
-        if (allFilled()) {
-          startHole_ = -1;
-          endHole_ = -1;
-        } else {
-          findHole(startHole_);
-        }
+      if (allFilled()) {
+        startHole_ = -1;
+      } else {
+        findHole(startHole_);
       }
 
       if (allFilled()) {
@@ -177,8 +142,7 @@ hidato.path = (function () {
       cell.type = 'open';
       result.path[cell.val].type = 'ref-open';
 
-      startHole_ = cell.val;
-      endHole_ = (direction_ === 'up') ? startHole_ + 1 : startHole_ - 1;
+      findHole(cell.val);
     }
 
     activeCell_ = cell;
