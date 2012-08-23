@@ -119,8 +119,20 @@ hidato.pathCoordCellConverter = (function () {
         y2: pos * cellSize_ + 0.5 * height_ + 0.5 * cellSize_
       };
     }
-  };
+  }; 
   
+  result.getCellFromCoordinates = function (coord) {
+    var
+      index;
+      
+    if (orientation_ === 'vert') {
+      index = Math.floor((coord.x - 0.5 * width_ + 0.5 * cellSize_) / cellSize_) + nextAdd_;
+    } else {
+      index = Math.floor((coord.y - 0.5 * height_ + 0.5 * cellSize_) / cellSize_) + nextAdd_;
+    }
+
+    return path_.path[index];
+  };
   
   return result;
 }());
