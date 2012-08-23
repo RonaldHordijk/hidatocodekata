@@ -155,7 +155,8 @@ hidato.path = (function () {
     } else if (cell.type === 'open') {
       cell.type = 'used';
       cell.val = startHole_;
-      result.path[startHole_].type = 'ref-used';
+      result.path[startHole_].type = 'used';
+      result.path[startHole_].val = startHole_;
 
       startHole_ = (direction_ === 'up') ? startHole_ + 1 : startHole_ - 1;
 
@@ -174,7 +175,7 @@ hidato.path = (function () {
 
     } else if ((cell.type === 'used') || (cell.type === 'error')) {
       cell.type = 'open';
-      result.path[cell.sol].type = 'ref-open';
+      result.path[cell.val].type = 'ref-open';
 
       startHole_ = cell.val;
       endHole_ = (direction_ === 'up') ? startHole_ + 1 : startHole_ - 1;
