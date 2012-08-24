@@ -47,7 +47,7 @@ Ext.setup({
         dock: 'top',
         ui: 'light',
         title: 'Hidato',
-        items: [resultButton, settingsButton]
+        items: [resultButton, {xtype: 'spacer'}, settingsButton]
       });   
 
     var 
@@ -89,7 +89,6 @@ Ext.setup({
     var 
       unsortButton = new Ext.Button({
         text: 'Unsorted',
-        align: 'right',
         handler: function() {
           puzzleStore.setSorters(["name"]).sort();
         }  
@@ -98,7 +97,6 @@ Ext.setup({
     var 
       sortButton = new Ext.Button({
         text: 'sort',
-        align: 'right',
         handler: function() {
           Ext.Viewport.add(sortPicker);
           sortPicker.show();          
@@ -174,7 +172,7 @@ Ext.setup({
         title: 'Puzzles',
         dock: 'top',
         align: 'top',
-        items: [backButton, unsortButton,  sizeButton, levelButton]
+        items: [backButton, {xtype: 'spacer'}, unsortButton,  sizeButton, levelButton]
     });   
     
     var
@@ -204,7 +202,7 @@ Ext.setup({
             docked: 'top',        
             ui: 'light',
             title: 'Puzzles',
-            items: [backButton,  sortButton], 
+            items: [backButton,  {xtype: 'spacer'}, sortButton], 
         }],            
         listeners: {
             select: function (list, model) {
