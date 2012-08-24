@@ -1,6 +1,10 @@
 /*jslint browser: true, windows: true, es5: true, nomen: false, plusplus: false, maxerr: 500, indent: 2*/
 /*global hidato: false */
 
+hidato.drawingSchemes = {
+    active: null
+  }; 
+
 hidato.drawingScheme = (function () {
   'use strict';
 
@@ -40,7 +44,7 @@ hidato.drawingScheme = (function () {
     return 'rgba(200,200,120,' + alpha + ')';
   };
 
-  return result;
+  hidato.drawingSchemes[result.name] = result;
 }());
 
 hidato.drawingSchemeLight = (function () {
@@ -68,5 +72,6 @@ hidato.drawingSchemeLight = (function () {
     return 'rgba(200,200,220,' + alpha + ')';
   };
 
-  return result;
+  hidato.drawingSchemes[result.name] = result;
+  hidato.drawingSchemes.active = result;
 }());

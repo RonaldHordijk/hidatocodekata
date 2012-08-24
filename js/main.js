@@ -65,7 +65,6 @@
       return;
     }
 
-
     hidato.path.select(cell);
 
     segmentAnimation_.update(hidato.path.startSegment(), hidato.path.endSegment());
@@ -81,7 +80,7 @@
     hidato.path.initialize(hidato.board);
     hidato.boardCoordCellConverter.initialize(hidato.board, hidato.canvas.width, hidato.canvas.height);
     hidato.pathCoordCellConverter.initialize(hidato.path, hidato.canvas.width, hidato.canvas.height);
-    hidato.drawer.initialize(hidato.canvas, hidato.drawingSchemeLight, hidato.animationPool);
+    hidato.drawer.initialize(hidato.canvas, hidato.drawingSchemes.active, hidato.animationPool);
 
     hidato.animationPool.clear();
 
