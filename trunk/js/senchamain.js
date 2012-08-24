@@ -229,8 +229,32 @@ Ext.setup({
       });
 
     backButton2.addListener('tap', function () {
+       
       viewport.setActiveItem(viewport.mainPanel, {type: 'slide', direction: 'right'});
     });       
+
+    var 
+      colorSchemeItems = [];
+     
+    Object.keys(hidato.drawingSchemes).forEach(function (key) {
+      if (key === 'active') {
+        return;
+      }
+      
+      colorSchemeItems.push({
+        xtype: 'radiofield',
+        name: 'colorscheme',
+        label: key,
+        value: key,
+        checked: hidato.drawingSchemes.active === hidato.drawingSchemes[key],
+        listeners: {
+          check: function (comp, e) {
+            hidato.drawer.initialize(hidato.canvas, hidato.drawingSchemes[key], hidato.animationPool);
+          }
+        }  
+      });
+    }); 
+     
 
     var 
       settingsform = Ext.create('Ext.Panel', {
@@ -242,22 +266,12 @@ Ext.setup({
         items: [{
           xtype: 'fieldset',
           title: 'Colour scheme',
+          id: 'colorSchemeSelect',
           instructions: 'Please select a colour scheme.',
           defaults: {
             labelWidth: 180
           }, // defaults
-          items: [{
-            xtype: 'radiofield',
-            name: 'colorscheme',
-            label: 'Light',
-            value: 'Light',
-            checked: true
-          }, {
-            xtype: 'radiofield',
-            name: 'colorscheme',
-            label: 'Dark',
-            value: 'Dark'
-          }] // items (fieldset)
+          items: colorSchemeItems,
         }, {
             xtype: 'button',
             text: 'Clear history',
