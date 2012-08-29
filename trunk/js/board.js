@@ -33,6 +33,7 @@ hidato.board = (function () {
     result.nRows = data.nRows;
     result.nCols = data.nCols;
     result.level = data.level;
+    result.cells = [];
 
     for (i = 0; i < result.nRows; i++) {
       for (j = 0; j < result.nCols; j++) {

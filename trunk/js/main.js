@@ -54,9 +54,9 @@
     if (!hidato.viewport.isMainForm()) {
       return;
     }
-     
+
     cell = hidato.boardCoordCellConverter.getCellFromCoordinates({x: event.offsetX || event.pageX, y: event.offsetY || event.pageY});
-    
+
     if (!cell) {
       cell = hidato.pathCoordCellConverter.getCellFromCoordinates({x: event.offsetX || event.pageX, y: event.offsetY || event.pageY});
     }
@@ -74,7 +74,7 @@
     segmentAnimation_.update(hidato.path.startSegment(), hidato.path.endSegment());
 
     hidato.animationPool.addSelectAnimation(cell);
-    
+
     hidato.pathCoordCellConverter.setNextAdd(hidato.path.nextSelect());
 
     if (hidato.path.isFinished()) {

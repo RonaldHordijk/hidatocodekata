@@ -70,7 +70,7 @@ hidato.pathCoordCellConverter = (function () {
   result.resize = function (width, height) {
     width_ = width;
     height_ = height;
-    
+
     borderSize_ = Math.min(BORDERFACTOR * width, BORDERFACTOR * height);
 
     if (width < height) {
@@ -92,10 +92,10 @@ hidato.pathCoordCellConverter = (function () {
     path_ = path;
 
     result.resize(width, height);
-    
+
     nextAdd_ = 1;
   };
-  
+
   result.setNextAdd = function (nextAdd) {
     nextAdd_ = nextAdd;
   };
@@ -103,7 +103,7 @@ hidato.pathCoordCellConverter = (function () {
   result.celltoRect = function (cell) {
     var
       pos = (cell.sol || cell.val) - nextAdd_;
-    
+
     if (orientation_ === 'vert') {
       return {
         x1: pos * cellSize_ + 0.5 * width_ - 0.5 * cellSize_,
@@ -119,12 +119,12 @@ hidato.pathCoordCellConverter = (function () {
         y2: pos * cellSize_ + 0.5 * height_ + 0.5 * cellSize_
       };
     }
-  }; 
-  
+  };
+
   result.getCellFromCoordinates = function (coord) {
     var
       index;
-      
+
     if (orientation_ === 'vert') {
       index = Math.floor((coord.x - 0.5 * width_ + 0.5 * cellSize_) / cellSize_) + nextAdd_;
     } else {
@@ -133,6 +133,6 @@ hidato.pathCoordCellConverter = (function () {
 
     return path_.path[index];
   };
-  
+
   return result;
 }());

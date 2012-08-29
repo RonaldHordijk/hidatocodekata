@@ -1,11 +1,12 @@
 /*jslint browser: true, windows: true, es5: true, nomen: false, plusplus: false, maxerr: 500, indent: 2*/
 /*global hidato: false */
 
-hidato.drawingSchemes = {
+hidato.drawingSchemes =
+  {
     active: null
-  }; 
+  };
 
-hidato.drawingScheme = (function () {
+(function () {
   'use strict';
 
   var
@@ -47,7 +48,7 @@ hidato.drawingScheme = (function () {
   hidato.drawingSchemes[result.name] = result;
 }());
 
-hidato.drawingSchemeLight = (function () {
+(function () {
   'use strict';
 
   var
@@ -56,7 +57,7 @@ hidato.drawingSchemeLight = (function () {
       backgroundColor: 'rgb(255,245,205)',
       lineColor: 'black',
       cellbackgroundColorFixed: 'rgb(236, 232, 129)',
-      cellbackgroundColor: 'rgb(248, 248, 179)', 
+      cellbackgroundColor: 'rgb(248, 248, 179)',
       fontColorFixed: 'rgb(48,118,168)',
       fontColorUsed: 'rgb(138,202,247)',
       fontColorError: 'red',
