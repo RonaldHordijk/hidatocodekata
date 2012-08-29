@@ -65,6 +65,10 @@
       return;
     }
 
+    if (hidato.path.isFinished()) {
+      return;
+    }
+
     hidato.path.select(cell);
 
     segmentAnimation_.update(hidato.path.startSegment(), hidato.path.endSegment());
@@ -72,6 +76,10 @@
     hidato.animationPool.addSelectAnimation(cell);
     
     hidato.pathCoordCellConverter.setNextAdd(hidato.path.nextSelect());
+
+    if (hidato.path.isFinished()) {
+      hidato.animationPool.addFinishedAnimation(hidato.path.path);
+    }
   }
 
   hidato.changepuzzle = function (puzzledata) {
