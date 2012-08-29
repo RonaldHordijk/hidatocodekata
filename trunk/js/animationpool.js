@@ -78,6 +78,15 @@ hidato.animationPool = (function () {
     return animation;
   };
 
+  result.addFinishedAnimation = function (cells) {
+    var
+      animation = hidato.createFinishedAnimation(cells);
+
+    result.foregroundAnimations.push(animation);
+
+    return animation;
+  };
+
   result.clear = function () {
     result.backgroundAnimations = [];
     result.foregroundAnimations = [];
