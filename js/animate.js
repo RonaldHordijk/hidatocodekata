@@ -219,20 +219,19 @@ hidato.createFinishedAnimation = function (cells) {
     result = {};
 
   function calcMinMaxPos() {
-    var 
-      i, cell;
-      
-    minPos_ = 100;
-    maxPos_ = 0;  
-    for(i = 1; i < cells.length; i++) {
-      cell = cells_[i].cell || cells_[i];
-      
-      minPos_ = Math.min(minPos_, cell.x - cell.y); 
-      maxPos_ = Math.max(maxPos_, cell.x - cell.y); 
-    }  
-    
-  }
+    var
+      i,
+      cell;
 
+    minPos_ = 100;
+    maxPos_ = 0;
+    for (i = 1; i < cells.length; i++) {
+      cell = cells_[i].cell || cells_[i];
+
+      minPos_ = Math.min(minPos_, cell.x - cell.y);
+      maxPos_ = Math.max(maxPos_, cell.x - cell.y);
+    }
+  }
 
   result.isInitialized = function () {
     return context_ !== undefined;
@@ -242,34 +241,32 @@ hidato.createFinishedAnimation = function (cells) {
     context_ = context;
     drawingScheme_ = drawingScheme;
     startTime_ = startTime;
-    
-    
   };
 
   result.animate = function (coordCellConverter, time) {
     var
       i,
-      cell, 
+      cell,
       pos,
       t,
       radius,
+      factor,
       center = {},
       rect;
 
     coordCellConverter_ = coordCellConverter;
 
     t = (0.0003 * (time - startTime_) * (maxPos_ - minPos_)) % (maxPos_ - minPos_);
-    
-    for(i = 1; i < cells.length; i++) {
+
+    for (i = 1; i < cells.length; i++) {
       cell = cells_[i].cell || cells_[i];
-      
+
       pos = cell.x - cell.y;
       pos = pos - minPos_;
-      
-      if (Math.abs(t - pos) < 1.5) {
 
+      if (Math.abs(t - pos) < 1.5) {
         rect = coordCellConverter_.celltoRect(cell);
-    
+
         context_.fillStyle = 'rgba(128,128,255,0.4)';
         context_.beginPath();
 
@@ -277,18 +274,19 @@ hidato.createFinishedAnimation = function (cells) {
         center.y = 0.5 * rect.y1 + 0.5 * rect.y2;
         center.w = 0.5 * (rect.x2 - rect.x1);
         center.h = 0.5 * (rect.x2 - rect.x1);
-        
-        rect.x1 = center.x - Math.min(1, 1.5 - Math.abs(t - pos)) * center.w;  
-        rect.x2 = center.x + Math.min(1, 1.5 - Math.abs(t - pos)) * center.w;  
-        rect.y1 = center.y - Math.min(1, 1.5 - Math.abs(t - pos)) * center.h;  
-        rect.y2 = center.y + Math.min(1, 1.5 - Math.abs(t - pos)) * center.h;  
+
+        factor = Math.min(1, 1.5 - Math.abs(t - pos));
+        rect.x1 = center.x - factor * center.w;
+        rect.x2 = center.x + factor * center.w;
+        rect.y1 = center.y - factor * center.h;
+        rect.y2 = center.y + factor * center.h;
 
         context_.rect(rect.x1, rect.y1, rect.x2 - rect.x1, rect.y2 - rect.y1);
         context_.fill();
-        
+
       }
-      
-    }  
+
+    }
 
   };
 

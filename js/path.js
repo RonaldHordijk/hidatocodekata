@@ -37,14 +37,14 @@ hidato.path = (function () {
 
     return !empty;
   }
-  
+
   function checkSolution(cell) {
     var
       errors = false,
       i;
 
     for (i = 1; i < nrCells_; i++) {
-      if ((result.path[i].type === 'ref-used') && 
+      if ((result.path[i].type === 'ref-used') &&
           (result.path[i].cell.val !== result.path[i].cell.sol)) {
 
         result.path[i].type = 'error';
@@ -101,11 +101,11 @@ hidato.path = (function () {
       }
     }
 
-   if (direction_ !== 'up') {
-     temp = startSegment_;
-     startSegment_ = endSegment_;
-     endSegment_ = temp;
-   }
+    if (direction_ !== 'up') {
+      temp = startSegment_;
+      startSegment_ = endSegment_;
+      endSegment_ = temp;
+    }
   }
 
   result.select = function (cell) {
@@ -142,11 +142,11 @@ hidato.path = (function () {
       findHole(cell.val);
 
     } else if ((cell.type === 'used') || (cell.type === 'ref-used') || (cell.type === 'error')) {
-      
+
       if (cell.cell) { // reference cell
         cell = cell.cell;
       }
-      
+
       cell.type = 'open';
       result.path[cell.val].type = 'ref-open';
 
@@ -164,15 +164,15 @@ hidato.path = (function () {
         result.path[cell.sol] = cell;
       } else {
         result.path[cell.sol] = {
-          type: 'ref-open', 
-          val: cell.sol, 
+          type: 'ref-open',
+          val: cell.sol,
           cell: cell
         };
       }
     });
 
     nrCells_ = result.path.length;
-    
+
     if (result.path[1]) {
       result.select(result.path[1]);
     }
@@ -184,7 +184,7 @@ hidato.path = (function () {
       i;
 
     for (i = 1; i < nrCells_; i++) {
-      if ((result.path[i].type === 'ref-open') || 
+      if ((result.path[i].type === 'ref-open') ||
           (result.path[i].type === 'error')) {
         noncorrect = true;
         break;
@@ -205,6 +205,6 @@ hidato.path = (function () {
   result.nextSelect = function () {
     return nextPick_;
   };
-  
+
   return result;
 }());
